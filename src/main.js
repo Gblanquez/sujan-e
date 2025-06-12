@@ -6,9 +6,11 @@ import menuClick from './animations/menu/menuClick'
 import initIntroAnimation from './animations/introSection/introAnimation'
 import initCertificationAnimation from './animations/certificationSection/certificationSection'
 import initStoryDesktop from './animations/storySection/storySection'
-
+import initCollectionAnimation from './animations/collectionSection/collectionSection'
 
 initIntroAnimation()
+
+initCollectionAnimation()
 
 initCertificationAnimation()
 
