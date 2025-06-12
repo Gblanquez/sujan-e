@@ -8,9 +8,13 @@ import initCertificationAnimation from './animations/certificationSection/certif
 import initStoryDesktop from './animations/storySection/storySection'
 import initCollectionAnimation from './animations/collectionSection/collectionSection'
 import initCampLinkAnimation from './animations/campLink/campLink'
-
+import initItineraryAnimation from './animations/itinerarySection/itinerarySection'
+import footerLinks from './animations/footerLinks/footerLinks'
 initIntroAnimation()
 initCampLinkAnimation()
+initItineraryAnimation()
+footerLinks()
+
 
 initCollectionAnimation()
 
