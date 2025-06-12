@@ -10,18 +10,17 @@ import initCollectionAnimation from './animations/collectionSection/collectionSe
 import initCampLinkAnimation from './animations/campLink/campLink'
 import initItineraryAnimation from './animations/itinerarySection/itinerarySection'
 import footerLinks from './animations/footerLinks/footerLinks'
+import initNavLinkAnimation from './animations/navLinks/navLinks'
+
+
+initNavLinkAnimation()
 initIntroAnimation()
 initCampLinkAnimation()
 initItineraryAnimation()
 footerLinks()
-
-
 initCollectionAnimation()
-
 initCertificationAnimation()
-
 initStoryDesktop()
-
 initSmoothScroll()
 menuClick()
 clickMainButton()
