@@ -12,6 +12,7 @@ import initItineraryAnimation from './animations/itinerarySection/itinerarySecti
 import footerLinks from './animations/footerLinks/footerLinks'
 import initNavLinkAnimation from './animations/navLinks/navLinks'
 import navSmallLinks from './animations/navLinks/navSmallLinks'
+import menuHover from './animations/menu/menuHover'
 
 
 navSmallLinks()
@@ -24,6 +25,7 @@ initCollectionAnimation()
 initCertificationAnimation()
 initStoryDesktop()
 initSmoothScroll()
+menuHover()
 menuClick()
 clickMainButton()
 subNavButtons()
