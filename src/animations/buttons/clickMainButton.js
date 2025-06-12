@@ -54,8 +54,8 @@ const clickMainButton = () =>
             { y: '105%' },
             {
                 y: '0%',
-                duration: 1.2,
                 opacity: 1,
+                duration: 1.2,
                 ease: 'power4.inOut',
                 stagger: 
                 {
@@ -82,8 +82,8 @@ const clickMainButton = () =>
     tlClose
         .to(subLabel, {
             y: '-105%',
-            duration: 1.2,
             opacity: 0,
+            duration: 1.2,
             ease: 'power4.inOut',
             stagger: {
                 each: 0.02,
@@ -122,7 +122,11 @@ const clickMainButton = () =>
 
     mainButton.addEventListener('click', () => {
         if (!isOpen) {
+            // Set initial states immediately before playing
             gsap.set(subWrapper, { scaleY: 0, transformOrigin: 'top' })
+            gsap.set(subTitle, { y: '105%', opacity: 0 })
+            gsap.set(subLabel, { y: '105%', opacity: 0 })
+            gsap.set(subImage, { x: '-100%' })
             tlOpen.play()
             isOpen = true
         } else {
