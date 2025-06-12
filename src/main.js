@@ -7,8 +7,10 @@ import initIntroAnimation from './animations/introSection/introAnimation'
 import initCertificationAnimation from './animations/certificationSection/certificationSection'
 import initStoryDesktop from './animations/storySection/storySection'
 import initCollectionAnimation from './animations/collectionSection/collectionSection'
+import initCampLinkAnimation from './animations/campLink/campLink'
 
 initIntroAnimation()
+initCampLinkAnimation()
 
 initCollectionAnimation()
 
