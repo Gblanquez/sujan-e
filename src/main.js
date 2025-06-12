@@ -11,8 +11,10 @@ import initCampLinkAnimation from './animations/campLink/campLink'
 import initItineraryAnimation from './animations/itinerarySection/itinerarySection'
 import footerLinks from './animations/footerLinks/footerLinks'
 import initNavLinkAnimation from './animations/navLinks/navLinks'
+import navSmallLinks from './animations/navLinks/navSmallLinks'
 
 
+navSmallLinks()
 initNavLinkAnimation()
 initIntroAnimation()
 initCampLinkAnimation()
