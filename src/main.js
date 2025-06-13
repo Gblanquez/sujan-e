@@ -15,6 +15,7 @@ import navSmallLinks from './animations/navLinks/navSmallLinks'
 import menuHover from './animations/menu/menuHover'
 import taxi from './taxi'
 
+
 // Initialize all animations
 // navSmallLinks()
 // initNavLinkAnimation()

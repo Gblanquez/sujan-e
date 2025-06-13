@@ -91,15 +91,7 @@ const initIntroAnimation = () => {
 
   if (!introContent || !heroWrapper) return;
 
-  gsap.set(introContent, {
-    scale: 0.9,
-    y: '-16%',
-    rotateX: -20,
-    perspective: 1000,
-    transformStyle: 'preserve-3d',
-    transformOrigin: 'center center'
-  });
-
+  // Remove the initial set since renderer handles it
   gsap.fromTo(
     introContent,
     {
@@ -122,7 +114,6 @@ const initIntroAnimation = () => {
       },
     }
   );
-
 
   initTextAnimation();
 };

@@ -2,8 +2,23 @@ import { Renderer } from '@unseenco/taxi'
 import { gsap } from 'gsap'
 import loadImages from '../load/load.js'
 import SplitText from 'gsap/SplitText'
+import ScrollTrigger from 'gsap/ScrollTrigger'
+import { initSmoothScroll } from '../smoothScroll/smoothScroll'
+import subNavButtons from '../animations/buttons/subNavButtons'
+import clickMainButton from '../animations/buttons/clickMainButton'
+import menuClick from '../animations/menu/menuClick'
+import initIntroAnimation from '../animations/introSection/introAnimation'
+import initCertificationAnimation from '../animations/certificationSection/certificationSection'
+import initStoryDesktop from '../animations/storySection/storySection'
+import initCollectionAnimation from '../animations/collectionSection/collectionSection'
+import initCampLinkAnimation from '../animations/campLink/campLink'
+import initItineraryAnimation from '../animations/itinerarySection/itinerarySection'
+import footerLinks from '../animations/footerLinks/footerLinks'
+import initNavLinkAnimation from '../animations/navLinks/navLinks'
+import navSmallLinks from '../animations/navLinks/navSmallLinks'
+import menuHover from '../animations/menu/menuHover'
 
-gsap.registerPlugin(SplitText)
+gsap.registerPlugin(SplitText, ScrollTrigger)
 
 export default class DefaultRenderer extends Renderer {
     async initialLoad() {
@@ -198,18 +213,39 @@ export default class DefaultRenderer extends Renderer {
                     each: 0.03
                 }
             }, '<+=0.9') // Start when clip-path is about halfway
-            .to(navWrapper, {
+            .to([navWrapper, '.intro_s'], {
                 opacity: 1,
                 y: '0%',
                 duration: 2.2,
                 ease: 'power4.out'
-            }, '<+=0.2') 
+            }, '<+=0.2')
 
         // Set view to be visible from the start
         gsap.set(view, { opacity: 1 })
 
         // Wait for all animations to complete
         await Promise.all([exitTl.then(), revealTl.then()])
+
+        // Initialize all animations after loading is complete
+        navSmallLinks()
+        initNavLinkAnimation()
+
+        // Initialize remaining animations
+        initIntroAnimation()
+        initCampLinkAnimation()
+        initItineraryAnimation()
+        footerLinks()
+        initCollectionAnimation()
+        initCertificationAnimation()
+        initStoryDesktop()
+        initSmoothScroll()
+        menuHover()
+        menuClick()
+        clickMainButton()
+        subNavButtons()
+
+        // Refresh ScrollTrigger to pick up new elements
+        ScrollTrigger.refresh()
 
         return Promise.resolve()
     }
