@@ -26,21 +26,35 @@ export default class DefaultRenderer extends Renderer {
 
         // Split hero title text
         const splitTitle = new SplitText(heroTitle, {
-            type: 'lines,words',
+            type: 'lines,words,chars',
             linesClass: 'split-line'
         })
 
-        // Create line wrappers for the hero title
+        // Create line wrappers for the hero title and add perspective
         splitTitle.lines.forEach(line => {
             const wrapper = document.createElement('div')
             wrapper.style.overflow = 'hidden'
             wrapper.style.display = 'block'
+            wrapper.style.perspective = '1000px'
             line.parentNode.insertBefore(wrapper, line)
             wrapper.appendChild(line)
         })
 
-        // Set initial state for title lines
-        gsap.set(splitTitle.lines, { y: '100%' })
+        // Set 3D properties on the title element
+        gsap.set(heroTitle, {
+            perspective: 1000,
+            transformStyle: 'preserve-3d'
+        })
+
+        gsap.set(splitTitle.chars, { 
+            x: '-10%',
+            y: '100%',
+            rotateX: -72,
+            rotateY: -45,
+            rotateZ: -4,
+            transformOrigin: 'top',
+            transformStyle: 'preserve-3d'
+        })
 
         // Get the dimensions and position for the clip-path
         const heroRect = heroSection.getBoundingClientRect()
@@ -132,20 +146,24 @@ export default class DefaultRenderer extends Renderer {
                 duration: 1.8,
                 ease: 'power4.inOut'
             }, '<+=0.5')
-            .to(splitTitle.lines, {
+            .to(splitTitle.chars, {
+                x: '0%',
                 y: '0%',
-                duration: 1.2,
+                rotateX: 0,
+                rotateY: 0,
+                rotateZ:0,
+                duration: 2.4,
                 ease: 'power4.out',
                 stagger: {
-                    each: 0.1
+                    each: 0.03
                 }
             }, '<+=0.9') // Start when clip-path is about halfway
             .to(navWrapper, {
                 opacity: 1,
                 y: '0%',
-                duration: 1.2,
+                duration: 2.2,
                 ease: 'power4.out'
-            }, '<') // Start with the title animation
+            }, '<+=0.2') 
 
         // Set view to be visible from the start
         gsap.set(view, { opacity: 1 })
