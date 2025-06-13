@@ -1,1 +1,5 @@
-
+.load_w
+{
+    display: flex;
+    pointer-events: none;
+}

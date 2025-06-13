@@ -13,19 +13,20 @@ import footerLinks from './animations/footerLinks/footerLinks'
 import initNavLinkAnimation from './animations/navLinks/navLinks'
 import navSmallLinks from './animations/navLinks/navSmallLinks'
 import menuHover from './animations/menu/menuHover'
+import taxi from './taxi'
 
-
-navSmallLinks()
-initNavLinkAnimation()
-initIntroAnimation()
-initCampLinkAnimation()
-initItineraryAnimation()
-footerLinks()
-initCollectionAnimation()
-initCertificationAnimation()
-initStoryDesktop()
-initSmoothScroll()
-menuHover()
-menuClick()
-clickMainButton()
-subNavButtons()
+// Initialize all animations
+// navSmallLinks()
+// initNavLinkAnimation()
+// initIntroAnimation()
+// initCampLinkAnimation()
+// initItineraryAnimation()
+// footerLinks()
+// initCollectionAnimation()
+// initCertificationAnimation()
+// initStoryDesktop()
+// initSmoothScroll()
+// menuHover()
+// menuClick()
+// clickMainButton()
+// subNavButtons()

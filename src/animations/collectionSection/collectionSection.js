@@ -93,18 +93,18 @@ const initCollectionAnimation = () => {
 
   gsap.fromTo('.ca_camp_item',
     {
-      y: '100%'
+      y: '50%'
     },
     {
       y: '0%',
       ease: 'none',
       stagger: {
-        each: 0.06,
-        from: 'center'
+        each: 0.1,
+        from: 'start'
       },
       scrollTrigger: {
         trigger: collectionWrapper,
-        start: 'top bottom%',
+        start: 'top center',
         end: 'bottom bottom',
         scrub: 1,
       }

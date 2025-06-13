@@ -1,0 +1,180 @@
+import { Renderer } from '@unseenco/taxi'
+import { gsap } from 'gsap'
+import loadImages from '../load/load.js'
+import SplitText from 'gsap/SplitText'
+
+gsap.registerPlugin(SplitText)
+
+export default class DefaultRenderer extends Renderer {
+    async initialLoad() {
+        const loadText = document.querySelector('.load_txt')
+        const loadNumb = document.querySelector('.load_n')
+        const loadBWrap = document.querySelector('.load_d')
+        const loadB = document.querySelector('.load_bg')
+        const view = this.content
+        const heroSection = document.querySelector('.hero_s')
+        const heroTitle = document.querySelector('.h_title')
+        const navWrapper = document.querySelector('.g_nav_w')
+
+        // Set initial states
+        gsap.set(view, { opacity: 0 })
+        gsap.set(loadText, { y: '100%' })
+        gsap.set(loadBWrap, { width: '12rem', height: '14rem' })
+        gsap.set(loadB, { width: '100%', height: '0%' })
+        gsap.set(loadNumb, { y: '100%' })
+        gsap.set(navWrapper, { opacity: 0, y: '-100%' })
+
+        // Split hero title text
+        const splitTitle = new SplitText(heroTitle, {
+            type: 'lines,words',
+            linesClass: 'split-line'
+        })
+
+        // Create line wrappers for the hero title
+        splitTitle.lines.forEach(line => {
+            const wrapper = document.createElement('div')
+            wrapper.style.overflow = 'hidden'
+            wrapper.style.display = 'block'
+            line.parentNode.insertBefore(wrapper, line)
+            wrapper.appendChild(line)
+        })
+
+        // Set initial state for title lines
+        gsap.set(splitTitle.lines, { y: '100%' })
+
+        // Get the dimensions and position for the clip-path
+        const heroRect = heroSection.getBoundingClientRect()
+        const remSize = parseFloat(getComputedStyle(document.documentElement).fontSize)
+        const boxWidth = 12 * remSize
+        const boxHeight = 14 * remSize
+        
+        // Calculate center point for initial clip rectangle
+        const centerX = heroRect.width / 2
+        const centerY = heroRect.height / 2
+
+        // Get the loadBWrap position
+        const loadBWrapRect = loadBWrap.getBoundingClientRect()
+        const loadBWrapCenterX = loadBWrapRect.left + (loadBWrapRect.width / 2)
+        const loadBWrapCenterY = loadBWrapRect.top + (loadBWrapRect.height / 2)
+        
+        // Calculate initial clip rectangle coordinates to match loadBWrap
+        const initialLeft = loadBWrapCenterX - (loadBWrapRect.width / 2)
+        const initialTop = loadBWrapCenterY - (loadBWrapRect.height / 2)
+        const initialRight = loadBWrapCenterX + (loadBWrapRect.width / 2)
+        const initialBottom = loadBWrapCenterY + (loadBWrapRect.height / 2)
+
+        // Set initial clip-path using pixel values
+        gsap.set(heroSection, { 
+            clipPath: `polygon(${initialLeft}px ${initialTop}px, ${initialRight}px ${initialTop}px, ${initialRight}px ${initialBottom}px, ${initialLeft}px ${initialBottom}px)`,
+            opacity: 1 
+        })
+        
+        // Initialize loading number
+        loadNumb.textContent = '00'
+
+        // Create loading timeline
+        const loadTl = gsap.timeline()
+
+        loadTl
+            .fromTo([loadText, loadNumb], {
+                y: '100%'
+            }, {
+                y: '0%',
+                duration: 1.2,
+                ease: 'power2.out',
+                stagger: 0.1
+            })
+            .fromTo(loadBWrap, {
+                scale: 0.7,
+            }, {
+                scale: 1,
+                duration: 1,
+                ease: 'power2.out'
+            }, '<')
+
+        // Wait for the initial animation to complete
+        await loadTl.then()
+        
+        // Wait for images to load
+        await loadImages()
+
+        // Create exit timeline
+        const exitTl = gsap.timeline()
+
+        // Set transform origin before animation
+        gsap.set(loadBWrap, { transformOrigin: 'top' })
+
+        // Exit animations
+        exitTl
+            .to(loadText, {
+                y: '-100%',
+                duration: 1,
+                ease: 'power2.inOut'
+            })
+            .to(loadNumb, {
+                y: '100%',
+                duration: 1,
+                ease: 'power2.inOut'
+            }, '<') // Start at same time as loadText
+            .to(loadBWrap, {
+                scaleY: 0,
+                duration: 1,
+                ease: 'power2.inOut',
+            }, '<+=0.2') // Start slightly after the text animations
+
+        // Create reveal timeline
+        const revealTl = gsap.timeline()
+
+        // Reveal animation with expanding polygon from center
+        revealTl
+            .to(heroSection, {
+                clipPath: `polygon(0px 0px, ${heroRect.width}px 0px, ${heroRect.width}px ${heroRect.height}px, 0px ${heroRect.height}px)`,
+                duration: 1.8,
+                ease: 'power4.inOut'
+            }, '<+=0.5')
+            .to(splitTitle.lines, {
+                y: '0%',
+                duration: 1.2,
+                ease: 'power4.out',
+                stagger: {
+                    each: 0.1
+                }
+            }, '<+=0.9') // Start when clip-path is about halfway
+            .to(navWrapper, {
+                opacity: 1,
+                y: '0%',
+                duration: 1.2,
+                ease: 'power4.out'
+            }, '<') // Start with the title animation
+
+        // Set view to be visible from the start
+        gsap.set(view, { opacity: 1 })
+
+        // Wait for all animations to complete
+        await Promise.all([exitTl.then(), revealTl.then()])
+
+        return Promise.resolve()
+    }
+
+    onEnter() {
+        const view = this.content
+        gsap.set(view, { opacity: 1 })
+    }
+
+    onEnterCompleted() {
+
+    }
+
+    onLeave() {
+        const view = this.content
+        return gsap.to(view, {
+            opacity: 0,
+            duration: 0.6,
+            ease: 'power2.in'
+        })
+    }
+
+    onLeaveCompleted() {
+
+    }
+} 

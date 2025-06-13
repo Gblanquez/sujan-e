@@ -30,6 +30,7 @@ const menuClick = () => {
     closeLineWraps.forEach(wrap => {
         gsap.set(wrap, { scaleX: 0, transformOrigin: 'center' })
     })
+    gsap.set(closeParent, { display: 'none' })
 
     let isOpen = false
     const tlOpen = gsap.timeline({ paused: true })
@@ -50,6 +51,11 @@ const menuClick = () => {
             stagger: {
                 each: 0.05,
                 from: 'start'
+            },
+            onComplete: () => {
+                gsap.set(menuLineWraps, { display: 'none' })
+                gsap.set(menuParent, { display: 'none' })
+                gsap.set(closeParent, { display: 'flex' })
             }
         })
         .to(menuText, {
@@ -58,31 +64,22 @@ const menuClick = () => {
             duration: 0.8,
             ease: 'power4.inOut',
         }, '<')
-        .add(() => {
-            gsap.set(menuLineWraps, { display: 'none' })
-            gsap.set(menuParent, { display: 'none' })
-            gsap.set(closeParent, { display: 'flex' })
-        }, '<0.8')
         .to(menuOpen, {
             transform: 'translateY(0%)',
             duration: 1.8,
             ease: 'power4.inOut'
         })
-        .to(closeLineWraps, {
+        .to([closeLineWraps, closeText], {
             scaleX: 1,
+            y: '0%',
+            opacity: 1,
             duration: 0.6,
             ease: 'power4.inOut',
             stagger: {
                 each: 0.05,
                 from: 'start'
             }
-        }, '-=1.4')
-        .to(closeText, {
-            y: '0%',
-            opacity: 1,
-            duration: 0.6,
-            ease: 'power4.inOut',
-        }, '<')
+        }, '-=1.2')
         .fromTo(menuImgs,
             { clipPath: 'inset(0 0 100% 0)' },
             {
@@ -158,8 +155,10 @@ const menuClick = () => {
             duration: 1.4,
             ease: 'power4.inOut'
         }, '0.4')
-        .to(closeLineWraps, {
+        .to([closeLineWraps, closeText], {
             scaleX: 0,
+            y: '110%',
+            opacity: 0,
             duration: 0.6,
             ease: 'power4.inOut',
             stagger: {
@@ -167,20 +166,15 @@ const menuClick = () => {
                 from: 'end'
             }
         }, '<')
-        .to(closeText, {
-            y: '110%',
-            opacity: 0,
-            duration: 0.6,
-            ease: 'power4.inOut',
-        }, '<')
         .add(() => {
-            gsap.set([closeParent, menuParent], { display: 'flex' })
+            gsap.set(closeParent, { display: 'none' })
+            gsap.set(menuParent, { display: 'flex' })
             gsap.set(menuLineWraps, { 
                 display: 'flex',
                 scaleX: 0,
                 transformOrigin: 'left'
             })
-        }, '-=0.4')
+        }, '-=0.2')
         .to(menuLineWraps, {
             scaleX: 1,
             duration: 0.8,
@@ -190,7 +184,7 @@ const menuClick = () => {
                 each: 0.05,
                 from: 'start'
             }
-        }, '-=0.2')
+        }, '<')
         .to(menuText, {
             y: '0%',
             opacity: 1,
@@ -213,6 +207,7 @@ const menuClick = () => {
             gsap.set(menuLabels, { y: '100%' })
             gsap.set(menuLinks, { y: '100%' })
             gsap.set(menuSocialLinks, { y: '100%', opacity: 0 })
+            gsap.set(closeLineWraps, { scaleX: 0 })
             
             lines.setMenuState(true)
             lines.pause()
