@@ -18,11 +18,33 @@ export default class DefaultRenderer extends Renderer {
 
         // Set initial states
         gsap.set(view, { opacity: 0 })
-        gsap.set(loadText, { y: '100%' })
         gsap.set(loadBWrap, { width: '12rem', height: '14rem' })
         gsap.set(loadB, { width: '100%', height: '0%' })
         gsap.set(loadNumb, { y: '100%' })
         gsap.set(navWrapper, { opacity: 0, y: '-100%' })
+
+        // Split load text
+        const splitLoadText = new SplitText(loadText, {
+            type: 'chars',
+            charsClass: 'load-char'
+        })
+
+        // Set 3D properties on load text
+        gsap.set(loadText, {
+            perspective: 1000,
+            transformStyle: 'preserve-3d'
+        })
+
+        // Set initial state for load text chars
+        gsap.set(splitLoadText.chars, {
+            x: '-10%',
+            y: '100%',
+            rotateX: -72,
+            rotateY: -45,
+            rotateZ: -4,
+            transformOrigin: 'top',
+            transformStyle: 'preserve-3d'
+        })
 
         // Split hero title text
         const splitTitle = new SplitText(heroTitle, {
@@ -90,14 +112,25 @@ export default class DefaultRenderer extends Renderer {
         const loadTl = gsap.timeline()
 
         loadTl
-            .fromTo([loadText, loadNumb], {
+            .to(splitLoadText.chars, {
+                x: '0%',
+                y: '0%',
+                rotateX: 0,
+                rotateY: 0,
+                rotateZ: 0,
+                duration: 2.4,
+                ease: 'power4.out',
+                stagger: {
+                    each: 0.03
+                }
+            })
+            .fromTo(loadNumb, {
                 y: '100%'
             }, {
                 y: '0%',
                 duration: 1.2,
-                ease: 'power2.out',
-                stagger: 0.1
-            })
+                ease: 'power2.out'
+            }, '<+=0.3')
             .fromTo(loadBWrap, {
                 scale: 0.7,
             }, {
@@ -120,21 +153,28 @@ export default class DefaultRenderer extends Renderer {
 
         // Exit animations
         exitTl
-            .to(loadText, {
+            .to(splitLoadText.chars, {
+                x: '-10%',
                 y: '-100%',
-                duration: 1,
-                ease: 'power2.inOut'
+                rotateX: 72,
+                rotateY: 45,
+                rotateZ: 4,
+                duration: 2.4,
+                ease: 'power4.inOut',
+                stagger: {
+                    each: 0.03
+                }
             })
             .to(loadNumb, {
                 y: '100%',
                 duration: 1,
                 ease: 'power2.inOut'
-            }, '<') // Start at same time as loadText
+            }, '<+=0.3')
             .to(loadBWrap, {
                 scaleY: 0,
                 duration: 1,
                 ease: 'power2.inOut',
-            }, '<+=0.2') // Start slightly after the text animations
+            }, '<+=0.2')
 
         // Create reveal timeline
         const revealTl = gsap.timeline()
