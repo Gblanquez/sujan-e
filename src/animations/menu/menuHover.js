@@ -9,7 +9,6 @@ const menuHover = () => {
     const closeText = document.querySelector('.m_text_close')
     const menuParent = document.querySelector('.m_l_w')
     const closeParent = document.querySelector('.m_l_close')
-    const closeLineWrap = document.querySelector('.m_l_close_wrap')
 
     // Force reset all states
     gsap.set(menuLines2, { clearProps: 'all' })
@@ -18,12 +17,11 @@ const menuHover = () => {
     // Set initial states for menu lines
     gsap.set(menuLines2, { scaleX: 0, transformOrigin: 'left', x: '-100%' })
     gsap.set(menuLines, { scaleX: 1, transformOrigin: 'right' })
-    gsap.set(menuLineWrap, { display: 'flex' })
+    gsap.set(menuLineWrap, { display: 'flex', scaleX: 1, transformOrigin: 'left' })
     
     // Set initial states for close elements
-    gsap.set(closeLineWrap, { display: 'none' })
-    gsap.set(closeText, { opacity: 0 })
     gsap.set(closeParent, { display: 'none' })
+    gsap.set(closeText, { y: '110%', opacity: 0 })
     
     // Set initial states for menu elements
     gsap.set(menuText, { opacity: 1 })
@@ -68,41 +66,13 @@ const menuHover = () => {
 
     let isOpen = false
 
-    // Handle menu state change
-    menuTrigger.addEventListener('click', () => {
-        isOpen = !isOpen
-        
-        // Handle line wrapper display
-        if (isOpen) {
-            gsap.set(menuLineWrap, { display: 'none' })
-            gsap.set(closeLineWrap, { display: 'flex' })
-            gsap.set(menuParent, { display: 'none' })
-            gsap.set(closeParent, { display: 'flex' })
-        } else {
-            gsap.set(closeLineWrap, { display: 'none' })
-            gsap.set(menuLineWrap, { display: 'flex' })
-            gsap.set(closeParent, { display: 'none' })
-            gsap.set(menuParent, { display: 'flex' })
-        }
-        
-        // Fade between menu and close text
-        gsap.to(menuText, {
-            opacity: isOpen ? 0 : 1,
-            duration: 0.3,
-            ease: 'power2.inOut'
-        })
-        gsap.to(closeText, {
-            opacity: isOpen ? 1 : 0,
-            duration: 0.3,
-            ease: 'power2.inOut'
-        })
-
-        // Reset timeline
-        menuTimeline.pause(0)
-    })
-
     menuTrigger.addEventListener('mouseenter', handleEnter)
     menuTrigger.addEventListener('mouseleave', handleLeave)
+
+    return () => {
+        menuTrigger.removeEventListener('mouseenter', handleEnter)
+        menuTrigger.removeEventListener('mouseleave', handleLeave)
+    }
 }
 
 export default menuHover
