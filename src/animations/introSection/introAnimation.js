@@ -91,26 +91,23 @@ const initIntroAnimation = () => {
 
   if (!introContent || !heroWrapper) return;
 
-  // Remove the initial set since renderer handles it
   gsap.fromTo(
     introContent,
     {
-      scale: 0.9,
-      rotateX: -20,
-      y: '-16%',
-      perspective: 1000,
-      transformStyle: 'preserve-3d',
-      transformOrigin: 'center center'
+      scale: 0.8,
+      y: '-17.5%'
     },
     {
       scale: 1,
-      rotateX: 0,
       y: '0%',
+      ease: 'power2.out',
       scrollTrigger: {
         trigger: heroWrapper,
-        start: 'top 80%',
-        end: 'bottom 5%',
-        scrub: true,
+        start: 'top 92%',
+        end: 'bottom 30%',
+        scrub: 2,
+        invalidateOnRefresh: true,
+        toggleActions: 'play none none none'
       },
     }
   );

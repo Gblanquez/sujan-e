@@ -11,8 +11,6 @@ const menuClick = () => {
     const menuSocialLinks = document.querySelectorAll('.nav_social_l')
     const menuText = document.querySelector('.m_text')
     const closeText = document.querySelector('.m_text_close')
-    const menuLineWraps = document.querySelectorAll('.m_l_wrap')
-    const closeLineWraps = document.querySelectorAll('.m_line_close_w')
     const menuParent = document.querySelector('.m_l_w')
     const closeParent = document.querySelector('.m_l_close')
 
@@ -23,13 +21,8 @@ const menuClick = () => {
     gsap.set(menuLabels, { y: '100%' })
     gsap.set(menuLinks, { y: '100%' })
     gsap.set(menuSocialLinks, { y: '100%', opacity: 0 })
-    gsap.set(closeText, { y: '110%', opacity: 0 })
-    menuLineWraps.forEach(wrap => {
-        gsap.set(wrap, { scaleX: 1, transformOrigin: 'left' })
-    })
-    closeLineWraps.forEach(wrap => {
-        gsap.set(wrap, { scaleX: 0, transformOrigin: 'center' })
-    })
+    gsap.set(menuText, { display: 'flex' })
+    gsap.set(closeText, { display: 'none' })
     gsap.set(closeParent, { display: 'none' })
 
     let isOpen = false
@@ -43,43 +36,17 @@ const menuClick = () => {
             display: 'block',
             duration: 0.1
         })
-        .to(menuLineWraps, {
-            scaleX: 0,
-            duration: 0.8,
-            ease: 'power4.inOut',
-            transformOrigin: 'left',
-            stagger: {
-                each: 0.05,
-                from: 'start'
-            },
-            onComplete: () => {
-                gsap.set(menuLineWraps, { display: 'none' })
-                gsap.set(menuParent, { display: 'none' })
-                gsap.set(closeParent, { display: 'flex' })
-            }
+        .add(() => {
+            gsap.set(menuParent, { display: 'none' })
+            gsap.set(closeParent, { display: 'flex' })
+            gsap.set(menuText, { display: 'none' })
+            gsap.set(closeText, { display: 'block' })
         })
-        .to(menuText, {
-            y: '-110%',
-            opacity: 0,
-            duration: 0.8,
-            ease: 'power4.inOut',
-        }, '<')
         .to(menuOpen, {
             transform: 'translateY(0%)',
             duration: 1.8,
             ease: 'power4.inOut'
         })
-        .to([closeLineWraps, closeText], {
-            scaleX: 1,
-            y: '0%',
-            opacity: 1,
-            duration: 0.6,
-            ease: 'power4.inOut',
-            stagger: {
-                each: 0.05,
-                from: 'start'
-            }
-        }, '-=1.2')
         .fromTo(menuImgs,
             { clipPath: 'inset(0 0 100% 0)' },
             {
@@ -155,42 +122,12 @@ const menuClick = () => {
             duration: 1.4,
             ease: 'power4.inOut'
         }, '0.4')
-        .to([closeLineWraps, closeText], {
-            scaleX: 0,
-            y: '110%',
-            opacity: 0,
-            duration: 0.6,
-            ease: 'power4.inOut',
-            stagger: {
-                each: 0.05,
-                from: 'end'
-            }
-        }, '<')
         .add(() => {
             gsap.set(closeParent, { display: 'none' })
             gsap.set(menuParent, { display: 'flex' })
-            gsap.set(menuLineWraps, { 
-                display: 'flex',
-                scaleX: 0,
-                transformOrigin: 'left'
-            })
+            gsap.set(closeText, { display: 'none' })
+            gsap.set(menuText, { display: 'block' })
         }, '-=0.2')
-        .to(menuLineWraps, {
-            scaleX: 1,
-            duration: 0.8,
-            ease: 'power4.inOut',
-            transformOrigin: 'left',
-            stagger: {
-                each: 0.05,
-                from: 'start'
-            }
-        }, '<')
-        .to(menuText, {
-            y: '0%',
-            opacity: 1,
-            duration: 0.8,
-            ease: 'power4.inOut',
-        }, '<')
         .set(menuOpen, {
             display: 'none'
         })
@@ -207,7 +144,6 @@ const menuClick = () => {
             gsap.set(menuLabels, { y: '100%' })
             gsap.set(menuLinks, { y: '100%' })
             gsap.set(menuSocialLinks, { y: '100%', opacity: 0 })
-            gsap.set(closeLineWraps, { scaleX: 0 })
             
             lines.setMenuState(true)
             lines.pause()

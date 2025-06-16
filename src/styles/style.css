@@ -3,3 +3,8 @@
     display: flex;
     pointer-events: none;
 }
+
+.pillar_content
+{
+    display: none;
+}
