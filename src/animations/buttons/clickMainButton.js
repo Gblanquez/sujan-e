@@ -8,6 +8,7 @@ const clickMainButton = () =>
     const subLabel = document.querySelectorAll('.s_textlabel')
     const subImage = document.querySelectorAll('.sub_img')
     const subWrapper = document.querySelector('.book_sm_p')
+    const arrow = document.querySelector('.m_arrow_w')
 
     let isOpen = false
     const tlOpen = gsap.timeline({ paused: true })
@@ -127,9 +128,24 @@ const clickMainButton = () =>
             gsap.set(subTitle, { y: '105%', opacity: 0 })
             gsap.set(subLabel, { y: '105%', opacity: 0 })
             gsap.set(subImage, { x: '-100%' })
+            
+            // Rotate arrow to 180
+            gsap.to(arrow, {
+                rotation: 180,
+                duration: 1.2,
+                ease: 'power4.inOut'
+            })
+            
             tlOpen.play()
             isOpen = true
         } else {
+            // Rotate arrow back to 0
+            gsap.to(arrow, {
+                rotation: 0,
+                duration: 1.2,
+                ease: 'power4.inOut'
+            })
+            
             tlClose.play()
             isOpen = false
         }

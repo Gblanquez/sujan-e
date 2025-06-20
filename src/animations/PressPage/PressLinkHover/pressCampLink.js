@@ -6,61 +6,73 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const pressCampLink = () => {
     const pressCampLinks = document.querySelectorAll('.press_camp_link')
+    const allPressImages = document.querySelectorAll('.c_press_img')
+    const allPressLabels = document.querySelectorAll('.press_c_label')
     
     if (!pressCampLinks.length) return;
 
-    // First, add unique identifiers to each link group
-    pressCampLinks.forEach((link, index) => {
-        const groupId = `press-group-${index}`
-        link.setAttribute('data-press-group', groupId)
-        
-        const img = link.querySelector('.c_press_img')
-        const label = link.querySelector('.press_c_label')
-        
-        if (img) img.setAttribute('data-press-group', groupId)
-        if (label) label.setAttribute('data-press-group', groupId)
-    })
+    pressCampLinks.forEach(link => {
+        const currentImage = link.querySelector('.c_press_img')
+        const currentLabel = link.querySelector('.press_c_label')
 
-    // Now set up hover effects
-    pressCampLinks.forEach(currentLink => {
-        const currentGroupId = currentLink.getAttribute('data-press-group')
-        
-        // Get all images and labels that are NOT in the current group
-        const otherImages = document.querySelectorAll(`.c_press_img:not([data-press-group="${currentGroupId}"])`)
-        const otherLabels = document.querySelectorAll(`.press_c_label:not([data-press-group="${currentGroupId}"])`)
-
-        // Create hover timeline
-        const hoverTl = gsap.timeline({ 
-            paused: true,
-            defaults: {
-                duration: 0.4,
-                ease: 'power2.out'
-            }
-        })
-
-        // Set up hover animation
-        hoverTl
-            .to(otherImages, {
-                filter: 'grayscale(100%)',
-                opacity: 0.5
+        link.addEventListener('mouseenter', () => {
+            // Fade out other images and labels
+            allPressImages.forEach(img => {
+                if (img !== currentImage) {
+                    gsap.to(img, {
+                        filter: 'grayscale(100%)',
+                        opacity: 0.5,
+                        duration: 0.8,
+                        ease: 'power3.inOut'
+                    })
+                }
             })
-            .to(otherLabels, {
-                opacity: 0.5
-            }, '<') // '<' makes this animation start at the same time as the previous one
 
-        // Add event listeners with some debouncing to prevent rapid firing
-        let hoverTimeout
-        
-        currentLink.addEventListener('mouseenter', () => {
-            clearTimeout(hoverTimeout)
-            hoverTl.play()
+            allPressLabels.forEach(label => {
+                if (label !== currentLabel) {
+                    gsap.to(label, {
+                        opacity: 0.5,
+                        duration: 0.8,
+                        ease: 'power3.inOut'
+                    })
+                }
+            })
+
+            // Highlight current image and label
+            gsap.to(currentImage, {
+                filter: 'grayscale(0%)',
+                opacity: 1,
+                scale: 1.05,
+                duration: 0.8,
+                ease: 'power2.inOut'
+            })
+
+            gsap.to(currentLabel, {
+                opacity: 1,
+                duration: 0.8,
+                ease: 'power2.inOut'
+            })
         })
 
-        currentLink.addEventListener('mouseleave', () => {
-            clearTimeout(hoverTimeout)
-            hoverTimeout = setTimeout(() => {
-                hoverTl.reverse()
-            }, 50) // Small delay to prevent flickering
+        link.addEventListener('mouseleave', () => {
+            // Reset all images and labels
+            allPressImages.forEach(img => {
+                gsap.to(img, {
+                    filter: 'grayscale(0%)',
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.8,
+                    ease: 'power2.inOut'
+                })
+            })
+
+            allPressLabels.forEach(label => {
+                gsap.to(label, {
+                    opacity: 1,
+                    duration: 0.8,
+                    ease: 'power2.inOut'
+                })
+            })
         })
     })
 }

@@ -6,52 +6,49 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const pressLink = () => {
     const pressLinks = document.querySelectorAll('.press_link')
+    const allPressImages = document.querySelectorAll('.pss_img')
     
     if (!pressLinks.length) return;
 
-    // Set up hover effects
     pressLinks.forEach(link => {
-        const img = link.querySelector('.pss_img')
-        if (!img) return;
+        const currentImage = link.querySelector('.pss_img')
+        if (!currentImage) return;
 
-        // Create separate timelines for hover in and out
-        const hoverInTl = gsap.timeline({ 
-            paused: true,
-            defaults: {
-                duration: 1.0,
-                ease: 'expo.out'
-            }
-        })
-
-        const hoverOutTl = gsap.timeline({ 
-            paused: true,
-            defaults: {
-                duration: 0.8,
-                ease: 'expo.out'
-            }
-        })
-
-        // Set up hover in animation
-        hoverInTl.to(img, {
-            scale: 1.1,
-            filter: 'grayscale(100%)'
-        })
-
-        // Set up hover out animation
-        hoverOutTl.to(img, {
-            scale: 1,
-            filter: 'grayscale(0%)',
-        })
-
-        // Add event listeners
         link.addEventListener('mouseenter', () => {
-            hoverOutTl.pause()
-            hoverInTl.restart()
+            // Fade out other images
+            allPressImages.forEach(img => {
+                if (img !== currentImage) {
+                    gsap.to(img, {
+                        filter: 'grayscale(100%)',
+                        opacity: 0.5,
+                        scale: 1,
+                        duration: 0.8,
+                        ease: 'power3.inOut'
+                    })
+                }
+            })
+
+            // Highlight current image
+            gsap.to(currentImage, {
+                filter: 'grayscale(0%)',
+                opacity: 1,
+                scale: 1.05,
+                duration: 0.8,
+                ease: 'power2.inOut'
+            })
         })
 
         link.addEventListener('mouseleave', () => {
-            hoverInTl.pause()
-            hoverOutTl.restart()
+            // Reset all images
+            allPressImages.forEach(img => {
+                gsap.to(img, {
+                    filter: 'grayscale(0%)',
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.8,
+                    ease: 'power2.inOut'
+                })
+            })
         })
     })
 } 
