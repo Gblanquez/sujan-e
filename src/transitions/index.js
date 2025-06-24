@@ -17,6 +17,7 @@ import conservationLoad from '../loadAnimations/conservationLoad'
 import relaisLoad from '../loadAnimations/relaisLoad'
 import pressLoad from '../loadAnimations/pressLoad'
 import contactLoad from '../loadAnimations/contactLoad'
+import campLoad from '../loadAnimations/campLoad'
 
 import menuHover from '../animations/menu/menuHover'
 import menuClick from '../animations/menu/menuClick'
@@ -39,6 +40,7 @@ import pressPage from '../animations/PressPage/pressPage'
 import relaisPage from '../animations/relaisPage/relaisPage'
 import collectionPage from '../animations/collectionPage/collectionPage'
 import contactPage from '../animations/contactPage/contactPage'
+import campPage from '../animations/campPage/campPage'
 
 // Menu Animations
 menuHover()
@@ -87,6 +89,12 @@ barba.init({
             namespace: 'collection',
             beforeEnter() {
                 collectionPage()
+            }
+        },
+        {
+            namespace: 'camp',
+            beforeEnter() {
+                campPage()
             }
         },
         {
@@ -146,7 +154,10 @@ barba.init({
                     await pressLoad()
                 } else if (next.namespace === 'contact') {
                     await contactLoad()
+                } else if (next.namespace === 'camp') {
+                    await campLoad()
                 }
+                
             },
             
             async leave({ current }) {
