@@ -16,3 +16,12 @@
     will-change: clip-path;
     clip-path: inset(0 0 0 0);
 }
+
+
+.camp-svg
+{
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+    object-fit: contain; 
+}

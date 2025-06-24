@@ -24,13 +24,14 @@ let maxScroll = getMaxScroll();
 const draggable = Draggable.create(list, {
     type: "x",
     inertia: true,
-    edgeResistance: 0.95,
-    inertiaResistance: 20,
+    edgeResistance: 0.95, // closer to 1 = softer edges
     bounds: {
       minX: -maxScroll,
       maxX: 0
     },
     allowContextMenu: true,
+    overshootTolerance: 0.15, // (optional) how far you can drag past bounds
+    inertiaResistance: 20, // (optional) slows down inertia (higher = slower stop)
   })[0];
 
 // Optional: Recalculate on resize
