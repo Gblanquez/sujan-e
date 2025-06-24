@@ -14,6 +14,27 @@ const menuClick = () => {
     const menuParent = document.querySelector('.m_l_w')
     const closeParent = document.querySelector('.m_l_close')
 
+    // Debug: Add mutation observer to track menu visibility changes
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && 
+                (mutation.attributeName === 'style' || mutation.attributeName === 'display')) {
+                const display = window.getComputedStyle(menuOpen).display;
+                const transform = window.getComputedStyle(menuOpen).transform;
+                console.log('Menu visibility changed:', {
+                    display,
+                    transform,
+                    stack: new Error().stack
+                });
+            }
+        });
+    });
+    
+    observer.observe(menuOpen, {
+        attributes: true,
+        attributeFilter: ['style']
+    });
+
     // Set initial states
     gsap.set(menuOpen, { display: 'none' })
     gsap.set(menuImgs, { clipPath: 'inset(0 0 100% 0)' })
@@ -34,7 +55,8 @@ const menuClick = () => {
     tlOpen
         .to(menuOpen, {
             display: 'block',
-            duration: 0.1
+            duration: 0.1,
+            onStart: () => console.log('Opening menu animation started')
         })
         .add(() => {
             gsap.set(menuParent, { display: 'none' })
@@ -128,12 +150,90 @@ const menuClick = () => {
             gsap.set(closeText, { display: 'none' })
             gsap.set(menuText, { display: 'block' })
         }, '-=0.2')
-        .set(menuOpen, {
-            display: 'none'
-        })
+
+    // Function to get the close animation timeline
+    const getCloseAnimation = () => {
+        const closeTl = gsap.timeline();
+        
+        // Ensure menu is in proper open state before closing
+        gsap.set(menuOpen, { display: 'block', transform: 'translateY(0%)' })
+        gsap.set(menuImgs, { clipPath: 'inset(0 0 0% 0)' })
+        gsap.set(menuTitles, { y: '0%' })
+        gsap.set(menuLabels, { y: '0%' })
+        gsap.set(menuLinks, { y: '0%', opacity: 1 })
+        gsap.set(menuSocialLinks, { y: '0%', opacity: 1 })
+        gsap.set(closeParent, { display: 'flex' })
+        gsap.set(menuParent, { display: 'none' })
+        gsap.set(closeText, { display: 'block' })
+        gsap.set(menuText, { display: 'none' })
+        
+        // Don't call lines.setMenuState(false) here - it interferes with our animation
+        // lines.setMenuState(false);
+        // lines.pause();
+        
+        // Build the close animation
+        closeTl
+            .to([menuSocialLinks, menuLinks], {
+                y: '100%',
+                opacity: 0,
+                duration: 0.8,
+                ease: 'power4.inOut',
+                stagger: {
+                    each: 0.02,
+                    from: 'end'
+                }
+            })
+            .to([menuTitles, menuLabels], {
+                y: '100%',
+                duration: 0.8,
+                ease: 'power4.inOut',
+                stagger: {
+                    each: 0.02,
+                    from: 'end'
+                }
+            }, '0.1')
+            .to(menuImgs, {
+                clipPath: 'inset(0 0 100% 0)',
+                duration: 1.2,
+                ease: 'power2.inOut',
+                stagger: {
+                    each: 0.01,
+                    from: 'end'
+                }
+            }, '0.2')
+            .to(menuOpen, {
+                transform: 'translateY(-100%)',
+                duration: 1.4,
+                ease: 'power4.inOut'
+            }, '0.4')
+            .add(() => {
+                gsap.set(closeParent, { display: 'none' })
+                gsap.set(menuParent, { display: 'flex' })
+                gsap.set(closeText, { display: 'none' })
+                gsap.set(menuText, { display: 'block' })
+            }, '-=0.2')
+
+        return closeTl;
+    };
+
+    // Modify the closeMenu function to optionally return the timeline
+    const closeMenu = () => {
+        if (!isOpen) {
+            return Promise.resolve();
+        }
+
+        return new Promise((resolve) => {
+            const closeTl = getCloseAnimation();
+            closeTl.eventCallback('onComplete', () => {
+                isOpen = false;
+                resolve();
+            });
+        });
+    };
 
     menuTrigger.addEventListener('click', () => {
         if (!isOpen) {
+            console.log('Opening menu via click');
             tlClose.pause(0)
             tlOpen.pause(0)
             
@@ -151,11 +251,8 @@ const menuClick = () => {
             tlOpen.play()
             isOpen = true
         } else {
-            lines.setMenuState(false)
-            lines.pause()
-            
-            tlClose.play()
-            isOpen = false
+            console.log('Closing menu via click');
+            closeMenu(); // Use our new closeMenu function
         }
     })
 
@@ -170,6 +267,30 @@ const menuClick = () => {
             lines.reverse()
         }
     })
+
+    // Return an object with the menu controls
+    return {
+        isMenuOpen: () => {
+            // Check both the internal state and the actual menu visibility
+            const menuElement = document.querySelector('.g_nav_open');
+            const menuVisible = menuElement && 
+                window.getComputedStyle(menuElement).display !== 'none' &&
+                window.getComputedStyle(menuElement).transform !== 'translateY(-100%)';
+            return isOpen || menuVisible;
+        },
+        closeMenu,
+        getCloseAnimation
+    };
 }
+
+// Create a singleton instance to manage menu state globally
+let menuInstance = null;
+
+export const getMenuInstance = () => {
+    if (!menuInstance) {
+        menuInstance = menuClick();
+    }
+    return menuInstance;
+};
 
 export default menuClick

@@ -206,4 +206,3 @@ barba.init({
 barba.hooks.enter((data) => {
     console.log('ENTER hook - namespace:', data.next.namespace)
 }) 
-
