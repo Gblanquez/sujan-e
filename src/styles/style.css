@@ -4,10 +4,6 @@
     pointer-events: none;
 }
 
-.pillar_content
-{
-    display: none;
-}
 
 .p_wrap {
     position: relative;
@@ -25,3 +21,87 @@
     display: block;
     object-fit: contain; 
 }
+
+.hero_mask
+{
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+
+    clip-path: polygon(
+      50% 50%, 50% 50%, 50% 50%, 50% 50% 
+    );
+  }
+
+
+.featured_title.jFont
+{
+    max-width: 20ch !important;
+}
+
+.featured_title.seraFont
+{
+    max-width: 22ch !important;
+}
+
+.story_title.jFont
+{
+    max-width: 16ch !important;
+    line-height: 1.1 !important;
+}
+
+.story_title.seraFont
+{
+    max-width: 18ch !important;
+
+}
+
+.f_exp_title.jFont
+{
+    max-width: 19ch !important;
+    line-height: 1.1 !important;
+}
+
+
+
+.f_exp_title.seraFont
+{
+    max-width: 18ch !important;
+}
+
+.info_line_t
+{
+    transform: scaleX(0%);
+    will-change: transform;
+}
+
+.info_gc_content {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 0;
+    visibility: hidden; 
+  }
+
+  .tents_c_item {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
+
+
+.q_text.elegant
+{
+    max-width: 38ch !important;
+}
+
+.q_text.ruth
+{
+    max-width: 20ch !important;
+}
+
+.q_text.roboto
+{
+    max-width: 40ch !important;
+}
+

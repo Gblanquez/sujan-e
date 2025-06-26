@@ -1,68 +1,88 @@
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
+import { Draggable } from 'gsap/Draggable';
+import { InertiaPlugin } from 'gsap/InertiaPlugin';
+
+gsap.registerPlugin(ScrollTrigger, Draggable, InertiaPlugin);
 
 const initStoryDesktop = () => {
-  gsap.registerPlugin(ScrollTrigger);
-
-//   const contentEl = document.querySelector('.story_c_content');
-//   if (contentEl) {
-//     // Initial setup
-//     gsap.set(contentEl, {
-//       position: 'sticky',
-//       top: '50%',
-//       transform: 'translateY(-50%)',
-//       zIndex: '2'
-//     });
-
-//     // Create ScrollTrigger for content sticky behavior
-//     ScrollTrigger.create({
-//       trigger: '.story_s',
-//       start: 'top bottom',
-//       end: 'bottom -90%',
-//       markers: true,
-//       onUpdate: (self) => {
-//         // Keep sticky until we reach the end point
-//         if (self.progress < 1) {
-//           gsap.set(contentEl, { position: 'sticky' });
-//         } else {
-//           gsap.set(contentEl, { position: 'relative' });
-//         }
-//       }
-//     });
-//   }
-
+  const storyWrapper = document.querySelector('.story_img_hold');
+  const storyList = document.querySelector('.story_imgs_wrap');
   const storyImages = gsap.utils.toArray('.story_items');
-  
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: '.story_s',
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: 1,
-    }
-  });
 
-  storyImages.forEach((image, index) => {
-    const duration = 1 + (index * 0.2); 
-    const imageEl = image.querySelector('.story_img_main');
-    
-    tl.fromTo(image, 
-      { y: '50%' },
-      {
-        y: '-100%',
-        duration: duration,
-        ease: 'none',
-      }, 0)
-    .to(imageEl, {
-      scale: 1.4,
-      duration: 1.4,
-      ease: 'none',
-    }, 0);
-  });
+  if (!storyWrapper || !storyList || !storyImages.length) return;
+
+  let cleanupFn;
+
+  if (window.innerWidth > 991) {
+    // Desktop animation with scroll scrub
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '.story_s',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+
+    storyImages.forEach((image, index) => {
+      const duration = 1 + (index * 0.2);
+      const imageEl = image.querySelector('.story_img_main');
+
+      tl.fromTo(image,
+        { y: '50%' },
+        { y: '-100%', duration, ease: 'none' },
+        0
+      ).to(imageEl,
+        { scale: 1.4, duration: 1.4, ease: 'none' },
+        0
+      );
+    });
+
+    cleanupFn = () => {
+      if (tl.scrollTrigger) tl.scrollTrigger.kill();
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+
+  } else {
+    // Mobile/tablet with Draggable behavior
+    function getMaxScroll() {
+      return storyList.scrollWidth - storyWrapper.offsetWidth;
+    }
+
+    let maxScroll = getMaxScroll();
+
+    const draggable = Draggable.create(storyList, {
+      type: 'x',
+      inertia: true,
+      edgeResistance: 0.95,
+      bounds: {
+        minX: -maxScroll,
+        maxX: 0
+      },
+      allowContextMenu: true,
+      overshootTolerance: 0.15,
+      inertiaResistance: 20
+    })[0];
+
+    const handleResize = () => {
+      maxScroll = getMaxScroll();
+      draggable.applyBounds({
+        minX: -maxScroll,
+        maxX: 0
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    cleanupFn = () => {
+      draggable.kill();
+      window.removeEventListener('resize', handleResize);
+    };
+  }
 
   return () => {
-    if (tl.scrollTrigger) tl.scrollTrigger.kill();
-    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    if (typeof cleanupFn === 'function') cleanupFn();
   };
 };
 

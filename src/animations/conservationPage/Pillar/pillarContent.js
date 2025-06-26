@@ -1,146 +1,98 @@
 import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
 import SplitText from 'gsap/SplitText';
 
-gsap.registerPlugin(ScrollTrigger, SplitText);
+gsap.registerPlugin(SplitText);
 
 const pillarContent = () => {
-    const pillarCards = document.querySelectorAll('.pillars_card');
-    const pillarText = document.querySelectorAll('.pillar_txt_c');
-    const pillarContent = document.querySelectorAll('.pillar_content');
+  const cards = document.querySelectorAll('.pillars_card');
+  const contents = document.querySelectorAll('.pillar_content');
+  const texts = document.querySelectorAll('.pillar_txt_c');
 
-    if (!pillarCards.length || !pillarText.length || !pillarContent.length) return;
+  if (!cards.length || !contents.length || !texts.length) return;
 
-    // Set initial state - all content hidden
-    pillarContent.forEach(content => {
-        gsap.set(content, {
-            display: 'none'
-        });
-    });
+  let active = null;
+  const timelines = [];
 
-    const animateContentClose = (content, text) => {
-        // Split text while it's visible
-        const splitText = new SplitText(text, {
-            type: 'lines,words,chars',
-            linesClass: 'split-line'
-        });
+  contents.forEach((content, index) => {
+    const text = texts[index];
+    const card = cards[index];
 
-        // Create wrapper divs for overflow masking
-        splitText.lines.forEach(line => {
-            const wrapper = document.createElement('div');
-            wrapper.style.overflow = 'hidden';
-            wrapper.style.display = 'block';
-            line.parentNode.insertBefore(wrapper, line);
-            wrapper.appendChild(line);
-        });
+    // Set initial state
+    gsap.set(content, { height: 0, opacity: 0, visibility: 'hidden', overflow: 'hidden' });
 
-        // Animate lines up and then hide content
-        return gsap.fromTo(
-            splitText.lines,
-            {
-                y: '0%'
-            },
-            {
-                y: '-100%',
-                duration: 0.6,
-                ease: 'power2.inOut',
-                stagger: {
-                    each: 0.01,
-                    from: 'start'
-                },
-                onComplete: () => {
-                    gsap.set(content, { display: 'none' });
-                    splitText.revert();
-                }
-            }
-        );
-    };
+    const tl = gsap.timeline({ paused: true, defaults: { ease: 'power4.inOut' } });
 
-    const animateContentOpen = (content, text) => {
-        // Show content first
-        gsap.set(content, { display: 'flex' });
+    // Expand content
+    tl.to(content, {
+      height: 'auto',
+      opacity: 1,
+      duration: 1.0,
+      onStart: () => {
+        content.style.visibility = 'visible';
+        content.style.overflow = 'visible';
+      }
+    }, 0);
 
-        // Split text after it's visible
-        const splitText = new SplitText(text, {
-            type: 'lines,words,chars',
-            linesClass: 'split-line'
-        });
+    // Animate SplitText lines
+    tl.add(() => {
+      const split = new SplitText(text, {
+        type: 'lines',
+        linesClass: 'split-line'
+      });
 
-        // Create wrapper divs for overflow masking
-        splitText.lines.forEach(line => {
-            const wrapper = document.createElement('div');
-            wrapper.style.overflow = 'hidden';
-            wrapper.style.display = 'block';
-            line.parentNode.insertBefore(wrapper, line);
-            wrapper.appendChild(line);
-        });
+      split.lines.forEach(line => {
+        const wrap = document.createElement('div');
+        wrap.style.overflow = 'hidden';
+        wrap.style.display = 'block';
+        line.parentNode.insertBefore(wrap, line);
+        wrap.appendChild(line);
+      });
 
-        // Animate the lines in
-        return gsap.fromTo(
-            splitText.lines,
-            {
-                y: '100%'
-            },
-            {
-                y: '0%',
-                duration: 1.8,
-                ease: 'power4.out',
-                stagger: {
-                    each: 0.02
-                }
-            }
-        );
-    };
-
-    let activeCard = null;
-    let activeAnimation = null;
-
-    // Set up first card to open on scroll
-    ScrollTrigger.create({
-        trigger: pillarCards[0],
-        start: 'top 80%',
-        once: true,
-        onEnter: () => {
-            activeCard = pillarCards[0];
-            activeAnimation = animateContentOpen(pillarContent[0], pillarText[0]);
+      gsap.fromTo(
+        split.lines,
+        { y: '100%' },
+        {
+          y: '0%',
+          opacity: 1,
+          duration: 1.8,
+          stagger: 0.08,
+          ease: 'expo.out',
+          onComplete: () => split.revert()
         }
+      );
+    }, 0.1);
+
+    tl.reverse(); // Start reversed
+    timelines[index] = tl;
+
+    card.addEventListener('click', () => {
+      const currentTL = timelines[index];
+
+      if (active === index) {
+        if (!currentTL.reversed() && currentTL.progress() < 1) {
+          currentTL.reverse();
+          active = null;
+        } else if (currentTL.progress() === 1) {
+          currentTL.reverse();
+          active = null;
+        }
+        return;
+      }
+
+      if (active !== null && timelines[active]) {
+        timelines[active].reverse();
+      }
+
+      currentTL.play();
+      active = index;
     });
+  });
 
-    pillarCards.forEach((card, index) => {
-        card.addEventListener('click', () => {
-            const targetContent = pillarContent[index];
-            const targetText = pillarText[index];
-
-            // If there's an active animation, kill it
-            if (activeAnimation) {
-                activeAnimation.kill();
-            }
-
-            // If clicking the active card, just close it
-            if (activeCard === card) {
-                activeAnimation = animateContentClose(targetContent, targetText);
-                activeCard = null;
-                return;
-            }
-
-            // If there's an active card, close it first then open the new one
-            if (activeCard !== null) {
-                const activeIndex = Array.from(pillarCards).indexOf(activeCard);
-                const closeAnimation = animateContentClose(pillarContent[activeIndex], pillarText[activeIndex]);
-                
-                // Wait for close animation to complete before opening new content
-                closeAnimation.then(() => {
-                    activeAnimation = animateContentOpen(targetContent, targetText);
-                });
-            } else {
-                // If no active card, just open the new content
-                activeAnimation = animateContentOpen(targetContent, targetText);
-            }
-
-            // Update active card
-            activeCard = card;
-        });
-    });
+  // 👉 Open the first card automatically
+  if (timelines[0]) {
+    timelines[0].play();
+    active = 0;
+  }
 };
 
 export default pillarContent;

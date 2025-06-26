@@ -41,9 +41,11 @@ import relaisPage from '../animations/relaisPage/relaisPage'
 import collectionPage from '../animations/collectionPage/collectionPage'
 import contactPage from '../animations/contactPage/contactPage'
 import campPage from '../animations/campPage/campPage'
+import campH from '../animations/campPage/campHero/campH'
 
 // Menu Animations
-menuHover()
+// menuHover()
+initSmoothScroll()
 menuClick()
 clickMainButton()
 subNavButtons()
@@ -93,8 +95,12 @@ barba.init({
         },
         {
             namespace: 'camp',
-            beforeEnter() {
+
+        beforeEnter()
+            {
+
                 campPage()
+
             }
         },
         {
@@ -156,6 +162,8 @@ barba.init({
                     await contactLoad()
                 } else if (next.namespace === 'camp') {
                     await campLoad()
+                    
+                    
                 }
                 
             },

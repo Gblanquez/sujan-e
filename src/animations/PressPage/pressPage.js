@@ -5,7 +5,7 @@ import pressLink from './PressLinkHover/pressLink'
 import { default as featuredButton } from '../buttons/featuredButton'
 
 const pressPage = () => {
-    pressH()
+    // pressH()
     pressContent()
     pressCampLink()
     pressLink()

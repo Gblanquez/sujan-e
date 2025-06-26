@@ -3,7 +3,7 @@ import relaisRest from './relaisRest/relaisRest'
 
 
 const relaisPage = () => {
-    relaisHero()
+    // relaisHero()
     relaisRest()
 }
 
