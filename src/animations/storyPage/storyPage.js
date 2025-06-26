@@ -8,7 +8,7 @@ const storyPage = () => {
    
    
     // storyH()
-    // timeline()
+    timeline()
     initIntroAnimation()
     initCollectionAnimation()
     initCampLinkAnimation()
