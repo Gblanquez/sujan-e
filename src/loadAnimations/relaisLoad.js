@@ -12,24 +12,20 @@ const relaisLoad = async () => {
   const loadBWrap = document.querySelector('.load_d')
   const loadB = document.querySelector('.load_bg')
   const view = document.querySelector('[data-barba="container"]')
-  const heroSection = document.querySelector('.r_c_w')
+  const heroSection = document.querySelector('.rc_h_w')
   const heroTitle = document.querySelector('.rc_title')
   const heroText = document.querySelector('.rc_text')
-  const heroImg = document.querySelector('.i_s_w')
   const heroLogo = document.querySelector('.rc_emb')
   const navWrapper = document.querySelector('.g_nav_w')
 
   stop()
 
+  // Pre-state
   gsap.set(view, { opacity: 0 })
   gsap.set(loadBWrap, { width: '12rem', height: '14rem' })
   gsap.set(loadB, { width: '100%', height: '0%' })
   gsap.set(loadNumb, { y: '100%' })
   gsap.set(navWrapper, { opacity: 0, y: '-100%' })
-
-  if (heroImg) {
-    gsap.set(heroImg, { y: '100%', opacity: 0 })
-  }
 
   if (heroLogo) {
     gsap.set(heroLogo, { opacity: 0 })
@@ -94,19 +90,11 @@ const relaisLoad = async () => {
 
   gsap.set(splitText.lines, { y: '100%' })
 
-  const heroRect = heroSection.getBoundingClientRect()
-  const remSize = parseFloat(getComputedStyle(document.documentElement).fontSize)
-  const loadBWrapRect = loadBWrap.getBoundingClientRect()
-  const loadBWrapCenterX = loadBWrapRect.left + loadBWrapRect.width / 2
-  const loadBWrapCenterY = loadBWrapRect.top + loadBWrapRect.height / 2
-
-  const initialLeft = loadBWrapCenterX - loadBWrapRect.width / 2
-  const initialTop = loadBWrapCenterY - loadBWrapRect.height / 2
-  const initialRight = loadBWrapCenterX + loadBWrapRect.width / 2
-  const initialBottom = loadBWrapCenterY + loadBWrapRect.height / 2
-
+  // Set up reveal container: height locked to 100vh initially
   gsap.set(heroSection, {
-    clipPath: `polygon(${initialLeft}px ${initialTop}px, ${initialRight}px ${initialTop}px, ${initialRight}px ${initialBottom}px, ${initialLeft}px ${initialBottom}px)`,
+    clipPath: 'polygon(45% 45%, 55% 45%, 55% 55%, 45% 55%)',
+    height: '100vh',
+    overflow: 'hidden',
     opacity: 1
   })
 
@@ -172,16 +160,15 @@ const relaisLoad = async () => {
 
   revealTl
     .to(heroSection, {
-      clipPath: `polygon(0px 0px, ${heroRect.width}px 0px, ${heroRect.width}px ${heroRect.height}px, 0px ${heroRect.height}px)`,
+      clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
       duration: 1.8,
       ease: 'power4.inOut'
     }, '<+=0.5')
-    .to(heroImg, {
-      y: '0%',
-      opacity: 1,
-      duration: 2.8,
-      ease: 'power4.out'
-    }, '<+=0.4')
+    .to(heroSection, {
+      height: '42rem',
+      duration: 1.2,
+      ease: 'power2.inOut'
+    }, '<+=0.1')
     .to(splitTitle.chars, {
       x: '0%',
       y: '0%',
@@ -192,7 +179,7 @@ const relaisLoad = async () => {
       duration: 2.4,
       ease: 'power4.out',
       stagger: { each: 0.03 }
-    }, '<+=0.9')
+    }, '<+=0.5')
     .to(splitText.lines, {
       y: '0%',
       duration: 2.4,
@@ -214,6 +201,11 @@ const relaisLoad = async () => {
       duration: 2.2,
       ease: 'power4.out'
     }, '<+=0.2')
+    .add(() => {
+      // Now switch to auto
+      heroSection.style.height = 'auto'
+      heroSection.style.overflow = ''
+    })
 
   gsap.set(view, { opacity: 1 })
 
