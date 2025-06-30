@@ -16,7 +16,6 @@ const homeLoad = async () => {
   const heroTitle = document.querySelector('.h_title')
   const navWrapper = document.querySelector('.g_nav_w')
 
-  // 🔒 Stop scrolling during load
   stop()
 
   gsap.set(view, { opacity: 0 })
@@ -24,6 +23,7 @@ const homeLoad = async () => {
   gsap.set(loadB, { width: '100%', height: '0%' })
   gsap.set(loadNumb, { y: '100%' })
   gsap.set(navWrapper, { opacity: 0, y: '-100%' })
+  gsap.set(heroSection, { clipPath: 'polygon(45% 45%, 55% 45%, 55% 55%, 45% 55%)', opacity: 0 })
 
   const splitLoadText = new SplitText(loadText, {
     type: 'chars',
@@ -74,12 +74,6 @@ const homeLoad = async () => {
     transformStyle: 'preserve-3d'
   })
 
-  // Set initial clip-path to small square
-  gsap.set(heroSection, {
-    clipPath: 'polygon(45% 45%, 55% 45%, 55% 55%, 45% 55%)',
-    opacity: 1
-  })
-
   loadNumb.textContent = '00'
 
   const loadTl = gsap.timeline()
@@ -100,7 +94,10 @@ const homeLoad = async () => {
     }, {
       y: '0%',
       duration: 1.2,
-      ease: 'power2.out'
+      ease: 'power2.out',
+      onStart: () => {
+        gsap.set(heroSection, { opacity: 1 });
+      }
     }, '<+=0.3')
     .fromTo(loadBWrap, {
       scale: 0.7,
@@ -168,7 +165,6 @@ const homeLoad = async () => {
   await Promise.all([exitTl.then(), revealTl.then()])
   ScrollTrigger.refresh()
 
-  // ✅ Allow scroll again once everything is done
   start()
 
   return Promise.resolve()

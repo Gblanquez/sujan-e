@@ -1,14 +1,19 @@
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import SplitText from 'gsap/SplitText';
+import { Draggable } from 'gsap/Draggable';
+import { InertiaPlugin } from 'gsap/InertiaPlugin';
 
-gsap.registerPlugin(ScrollTrigger, SplitText);
+gsap.registerPlugin(ScrollTrigger, SplitText, Draggable, InertiaPlugin);
 
 const conservationStats = () => {
   const statCards = document.querySelectorAll('.stat_card');
   const statLabel = document.querySelectorAll('.stat_label');
   const statText = document.querySelectorAll('.stats_text');
   const statNumbers = document.querySelectorAll('.nm');
+  const statWrapper = document.querySelector('.stats_p');
+  const statList = document.querySelector('.stats_c');
+  const statPagination = document.querySelector('.stat_pag_c');
 
   if (!statCards.length || !statNumbers.length) return;
 
@@ -25,7 +30,7 @@ const conservationStats = () => {
       textContent: '0'
     });
 
-    const cardTrigger = statCards[index] || number; // Fallback if mismatch
+    const cardTrigger = statCards[index] || number;
 
     gsap.to(number, {
       duration: 2.4,
@@ -37,7 +42,7 @@ const conservationStats = () => {
       },
       scrollTrigger: {
         trigger: cardTrigger,
-        start: 'top 85%', // Trigger slightly earlier
+        start: 'top 85%',
         toggleActions: 'play none none none',
         once: true
       }
@@ -107,6 +112,53 @@ const conservationStats = () => {
       }
     );
   });
+
+  if (window.innerWidth <= 1250 && statWrapper && statList) {
+    function getMaxScroll() {
+      const rawScroll = statList.scrollWidth - statWrapper.offsetWidth;
+      return Math.max(1, rawScroll); // prevent divide-by-zero
+    }
+
+    let maxScroll = getMaxScroll();
+
+    const draggable = Draggable.create(statList, {
+      type: 'x',
+      inertia: true,
+      edgeResistance: 0.95,
+      bounds: {
+        minX: -maxScroll,
+        maxX: 0
+      },
+      onDrag: updatePagination,
+      onThrowUpdate: updatePagination,
+      allowContextMenu: true,
+      overshootTolerance: 0.15,
+      inertiaResistance: 20,
+    })[0];
+
+    window.addEventListener('resize', () => {
+      maxScroll = getMaxScroll();
+      draggable.applyBounds({
+        minX: -maxScroll,
+        maxX: 0
+      });
+    });
+
+    function updatePagination() {
+      const progress = Math.min(1, Math.abs(draggable.x) / maxScroll);
+      gsap.to(statPagination, {
+        scaleX: progress,
+        transformOrigin: 'left center',
+        ease: 'power3.out',
+        duration: 0.3
+      });
+    }
+
+    gsap.set(statPagination, {
+      scaleX: 0,
+      transformOrigin: 'left center'
+    });
+  }
 };
 
 export default conservationStats;

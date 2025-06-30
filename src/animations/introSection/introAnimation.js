@@ -16,7 +16,6 @@ const initTextAnimation = () => {
       type: 'lines,words,chars',
       linesClass: 'split-line'
     });
-    
 
     splitTitle.lines.forEach(line => {
       const wrapper = document.createElement('div');
@@ -25,7 +24,6 @@ const initTextAnimation = () => {
       line.parentNode.insertBefore(wrapper, line);
       wrapper.appendChild(line);
     });
-
 
     gsap.fromTo(
       splitTitle.lines,
@@ -48,12 +46,10 @@ const initTextAnimation = () => {
     );
   });
 
-
   const splitParagraph = new SplitText(paragraph, {
     type: 'lines,words',
     linesClass: 'split-line'
   });
-
 
   splitParagraph.lines.forEach(line => {
     const wrapper = document.createElement('div');
@@ -62,7 +58,6 @@ const initTextAnimation = () => {
     line.parentNode.insertBefore(wrapper, line);
     wrapper.appendChild(line);
   });
-
 
   gsap.fromTo(
     splitParagraph.lines,
@@ -88,6 +83,7 @@ const initTextAnimation = () => {
 const initIntroAnimation = () => {
   const introContent = document.querySelector('.intro_s');
   const heroWrapper = document.querySelector('.hero_s');
+  const mainVideo = document.querySelector('.main_video');
 
   if (!introContent || !heroWrapper) return;
 
@@ -111,6 +107,23 @@ const initIntroAnimation = () => {
       },
     }
   );
+
+  if (mainVideo && introContent) {
+    gsap.fromTo(
+      mainVideo,
+      { scale: 1 },
+      {
+        scale: 1.5,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: introContent,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true
+        }
+      }
+    );
+  }
 
   initTextAnimation();
 };

@@ -145,3 +145,40 @@ const init = async () => {
 
 init()
 
+
+
+const lightSections = document.querySelectorAll('[data-bg-light]');
+const targets = [
+  document.querySelector('.n_light_b'),
+  document.querySelector('.m_text'),
+  ...document.querySelectorAll('.m_line')
+];
+
+let visibleCount = 0;
+
+if (lightSections.length && targets.length) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        visibleCount++;
+      } else {
+        visibleCount--;
+      }
+
+      visibleCount = Math.max(0, visibleCount);
+
+      targets.forEach(el => {
+        if (!el) return; // Skip nulls
+        if (visibleCount > 0) {
+          el.classList.add('dark');
+        } else {
+          el.classList.remove('dark');
+        }
+      });
+    });
+  }, {
+    threshold: 0.3
+  });
+
+  lightSections.forEach(section => observer.observe(section));
+}

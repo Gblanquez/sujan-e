@@ -16,7 +16,6 @@ const campLoad = async () => {
   const text = document.querySelector('.camp_text')
   const navWrapper = document.querySelector('.g_nav_w')
 
-  // SVG: use first valid .c_svg_wrap[id] and its <svg>
   const svgContainer = document.querySelector('.c_svg_wrap[id]')
   const svg = svgContainer?.querySelector('svg')
 
@@ -28,6 +27,10 @@ const campLoad = async () => {
   gsap.set(loadB, { width: '100%', height: '0%' })
   gsap.set(loadNumb, { y: '100%' })
   gsap.set(navWrapper, { opacity: 0, y: '-100%' })
+  gsap.set(heroSection, { 
+    clipPath: 'polygon(45% 45%, 55% 45%, 55% 55%, 45% 55%)',
+    opacity: 0 // Prevent flicker
+  })
 
   const splitLoadText = new SplitText(loadText, {
     type: 'chars',
@@ -83,12 +86,6 @@ const campLoad = async () => {
       })
     })
   }
-
-  // === HERO SECTION CLIP-PATH START ===
-  gsap.set(heroSection, {
-    clipPath: 'polygon(45% 45%, 55% 45%, 55% 55%, 45% 55%)',
-    opacity: 1
-  })
 
   loadNumb.textContent = '00'
 
@@ -148,10 +145,15 @@ const campLoad = async () => {
 
   revealTl
     .to(heroSection, {
+      opacity: 1, // Fade in here
+      duration: 0.3,
+      ease: 'power1.out'
+    }, '<+=0.4')
+    .to(heroSection, {
       clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
       duration: 2.2,
       ease: 'power4.inOut'
-    }, '<+=0.5')
+    }, '<+=0.1')
     .to(paths, {
       y: '0%',
       skewY: 0,

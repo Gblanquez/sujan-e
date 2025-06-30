@@ -8,6 +8,7 @@ const conservationIntro = () => {
     const statsTitle = document.querySelector('.stats_title');
     const abBg = document.querySelector('.ab_i_w');
     const statsSection = document.querySelector('.stats-s');
+    const hBg = document.querySelector('.h_bg');
 
     if (!statsTitle || !abBg || !statsSection) return;
 
@@ -47,7 +48,6 @@ const conservationIntro = () => {
         }
     );
 
-    // Animate the background
     gsap.fromTo(
         abBg,
         {
@@ -66,6 +66,23 @@ const conservationIntro = () => {
             }
         }
     );
+
+    if (hBg) {
+        gsap.fromTo(
+            hBg,
+            { scale: 1 },
+            {
+                scale: 1.5,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: statsSection,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: true
+                }
+            }
+        );
+    }
 };
 
 export default conservationIntro;
