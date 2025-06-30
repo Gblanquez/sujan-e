@@ -33,7 +33,7 @@ body::-webkit-scrollbar {
 
 .emblem-camp-svg
 {
-    width: 15rem !important;
+    width: 3rem !important;
     height: 100% !important;
     display: block;
     object-fit: cover;
