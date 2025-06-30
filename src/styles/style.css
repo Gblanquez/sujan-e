@@ -33,7 +33,7 @@ body::-webkit-scrollbar {
 
 .emblem-camp-svg
 {
-    width: 100% !important;
+    width: 15rem !important;
     height: 100% !important;
     display: block;
     object-fit: cover;
@@ -55,7 +55,9 @@ body::-webkit-scrollbar {
 .featured_title.jFont
 {
     max-width: 20ch !important;
+    
 }
+
 
 .featured_title.seraFont
 {
@@ -65,7 +67,7 @@ body::-webkit-scrollbar {
 .story_title.jFont
 {
     max-width: 16ch !important;
-    line-height: 1.1 !important;
+
 }
 
 .story_title.seraFont
@@ -77,7 +79,6 @@ body::-webkit-scrollbar {
 .f_exp_title.jFont
 {
     max-width: 19ch !important;
-    line-height: 1.1 !important;
 }
 
 
