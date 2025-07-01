@@ -205,19 +205,15 @@ const timeline = () => {
     el.addEventListener('click', e => {
       e.preventDefault();
       const target = tContent[i];
-      if (!target) return;
-
-      const y = window.scrollY + target.getBoundingClientRect().top;
+      const y = target.offsetTop;
 
       gsap.to(window, {
-        scrollTo: { y, autoKill: false },
+        scrollTo: {
+          y,
+          autoKill: false
+        },
         duration: 1.2,
-        ease: 'power4.inOut',
-        onComplete: () => {
-          setTimeout(() => {
-            ScrollTrigger.refresh();
-          }, 300);
-        }
+        ease: 'power4.inOut'
       });
     });
   });
