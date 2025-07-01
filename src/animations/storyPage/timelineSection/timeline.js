@@ -2,8 +2,9 @@ import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import SplitText from 'gsap/SplitText';
 import Flip from 'gsap/Flip';
+import ScrollToPlugin from 'gsap/ScrollToPlugin';
 
-gsap.registerPlugin(ScrollTrigger, SplitText, Flip);
+gsap.registerPlugin(ScrollTrigger, SplitText, Flip, ScrollToPlugin);
 
 const timeline = () => {
   const tContent = document.querySelectorAll('.timeline_content_p');
@@ -141,7 +142,7 @@ const timeline = () => {
       duration: 1,
       ease: 'power4.out',
       stagger: 0.05
-    }, '-=1.0') // Animate title slightly earlier
+    }, '-=1.0')
 
     .fromTo(splitTexts[i].lines, {
       y: '100%'
@@ -150,7 +151,7 @@ const timeline = () => {
       duration: 1,
       ease: 'power4.out',
       stagger: 0.05
-    }, '<0.1') // Animate text almost with title
+    }, '<0.1')
 
     .fromTo(splitYTitles[i].chars, {
       x: '-10%',
@@ -171,9 +172,8 @@ const timeline = () => {
       duration: 1.4,
       ease: 'power4.out',
       stagger: 0.03
-    }, '+=0.02') 
+    }, '+=0.02');
 
-    // Fade out entire section as it exits view
     gsap.to(section, {
       opacity: 0,
       ease: 'power1.out',
@@ -201,6 +201,26 @@ const timeline = () => {
           absolute: true
         });
       }
+    });
+  });
+
+  // === Clickable .y_title scroll to section ===
+  yTitle.forEach((yearEl, i) => {
+    yearEl.addEventListener('click', e => {
+      e.preventDefault();
+      const target = tContent[i];
+      if (!target) return;
+
+      const offsetTop = target.getBoundingClientRect().top + window.scrollY;
+
+      gsap.to(window, {
+        duration: 1.2,
+        scrollTo: {
+          y: offsetTop,
+          autoKill: true
+        },
+        ease: 'power4.inOut'
+      });
     });
   });
 };
