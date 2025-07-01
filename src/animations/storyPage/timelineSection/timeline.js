@@ -12,7 +12,7 @@ const timeline = () => {
   const tText = document.querySelectorAll('.timeline_text');
   const tImage = document.querySelectorAll('.timeline_i_wrap');
   const yTitle = document.querySelectorAll('.y_title');
-  const yText = document.querySelectorAll('.y_text'); // ✅ clickable year placeholders
+  const yText = document.querySelectorAll('.y_text');
   const yearLabels = document.querySelectorAll('.timeline_y_l_w');
   const yearLineWrappers = document.querySelectorAll('.y_line_w');
   const timelineIndicator = document.querySelector('.t_line');
@@ -135,7 +135,6 @@ const timeline = () => {
       duration: 1.2,
       ease: 'power4.out'
     })
-
     .fromTo(splitTitles[i].lines, {
       y: '110%'
     }, {
@@ -144,7 +143,6 @@ const timeline = () => {
       ease: 'power4.out',
       stagger: 0.05
     }, '-=1.0')
-
     .fromTo(splitTexts[i].lines, {
       y: '100%'
     }, {
@@ -153,7 +151,6 @@ const timeline = () => {
       ease: 'power4.out',
       stagger: 0.05
     }, '<0.1')
-
     .fromTo(splitYTitles[i].chars, {
       x: '-10%',
       y: '100%',
@@ -175,7 +172,6 @@ const timeline = () => {
       stagger: 0.03
     }, '+=0.02');
 
-    // Fade out section as it scrolls out
     gsap.to(section, {
       opacity: 0,
       ease: 'power1.out',
@@ -188,7 +184,6 @@ const timeline = () => {
       }
     });
   });
-
 
   yearLabels.forEach((label, index) => {
     ScrollTrigger.create({
@@ -206,27 +201,23 @@ const timeline = () => {
     });
   });
 
-
   yText.forEach((el, i) => {
     el.addEventListener('click', e => {
       e.preventDefault();
       const target = tContent[i];
       if (!target) return;
 
+      const y = window.scrollY + target.getBoundingClientRect().top;
 
-      requestAnimationFrame(() => {
-        const scrollY = target.getBoundingClientRect().top + window.scrollY;
-
-        ScrollTrigger.disable(false); 
-        gsap.to(window, {
-          scrollTo: scrollY,
-          duration: 1.2,
-          ease: 'power4.inOut',
-          onComplete: () => {
-            ScrollTrigger.enable();
+      gsap.to(window, {
+        scrollTo: { y, autoKill: false },
+        duration: 1.2,
+        ease: 'power4.inOut',
+        onComplete: () => {
+          setTimeout(() => {
             ScrollTrigger.refresh();
-          }
-        });
+          }, 300);
+        }
       });
     });
   });
