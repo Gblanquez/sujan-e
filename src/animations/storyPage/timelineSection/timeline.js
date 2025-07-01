@@ -12,13 +12,14 @@ const timeline = () => {
   const tText = document.querySelectorAll('.timeline_text');
   const tImage = document.querySelectorAll('.timeline_i_wrap');
   const yTitle = document.querySelectorAll('.y_title');
+  const yText = document.querySelectorAll('.y_text'); // 🆕 <- This is your clickable one
   const yearLabels = document.querySelectorAll('.timeline_y_l_w');
   const yearLineWrappers = document.querySelectorAll('.y_line_w');
   const timelineIndicator = document.querySelector('.t_line');
 
   if (
     !tContent.length || !tTitle.length || !tText.length || !tImage.length ||
-    !yTitle.length || !yearLabels.length || !timelineIndicator || !yearLineWrappers.length
+    !yTitle.length || !yText.length || !yearLabels.length || !timelineIndicator || !yearLineWrappers.length
   ) return;
 
   const splitTitles = [...tTitle].map(title =>
@@ -204,21 +205,18 @@ const timeline = () => {
     });
   });
 
-  // === Clickable .y_title scroll to section ===
-  yTitle.forEach((yearEl, i) => {
-    yearEl.addEventListener('click', e => {
+  // === ✅ y_text click → scroll to section ===
+  yText.forEach((el, i) => {
+    el.addEventListener('click', e => {
       e.preventDefault();
       const target = tContent[i];
       if (!target) return;
 
-      const offsetTop = target.getBoundingClientRect().top + window.scrollY;
+      const scrollY = target.getBoundingClientRect().top + window.scrollY;
 
       gsap.to(window, {
+        scrollTo: scrollY,
         duration: 1.2,
-        scrollTo: {
-          y: offsetTop,
-          autoKill: true
-        },
         ease: 'power4.inOut'
       });
     });
