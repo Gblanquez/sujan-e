@@ -2,7 +2,7 @@ import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import SplitText from 'gsap/SplitText';
 import Flip from 'gsap/Flip';
-import ScrollToPlugin from 'gsap/ScrollToPlugin';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 
 gsap.registerPlugin(ScrollTrigger, SplitText, Flip, ScrollToPlugin);
 
@@ -12,14 +12,14 @@ const timeline = () => {
   const tText = document.querySelectorAll('.timeline_text');
   const tImage = document.querySelectorAll('.timeline_i_wrap');
   const yTitle = document.querySelectorAll('.y_title');
-  const yText = document.querySelectorAll('.y_text'); // 🆕 <- This is your clickable one
+  const yText = document.querySelectorAll('.y_text'); // ✅ clickable year placeholders
   const yearLabels = document.querySelectorAll('.timeline_y_l_w');
   const yearLineWrappers = document.querySelectorAll('.y_line_w');
   const timelineIndicator = document.querySelector('.t_line');
 
   if (
     !tContent.length || !tTitle.length || !tText.length || !tImage.length ||
-    !yTitle.length || !yText.length || !yearLabels.length || !timelineIndicator || !yearLineWrappers.length
+    !yTitle.length || !yearLabels.length || !timelineIndicator || !yearLineWrappers.length
   ) return;
 
   const splitTitles = [...tTitle].map(title =>
@@ -175,6 +175,7 @@ const timeline = () => {
       stagger: 0.03
     }, '+=0.02');
 
+    // Fade out section as it scrolls out
     gsap.to(section, {
       opacity: 0,
       ease: 'power1.out',
@@ -188,7 +189,7 @@ const timeline = () => {
     });
   });
 
-  // === Flip year line movement ===
+
   yearLabels.forEach((label, index) => {
     ScrollTrigger.create({
       trigger: tContent[index],
@@ -205,19 +206,27 @@ const timeline = () => {
     });
   });
 
-  // === ✅ y_text click → scroll to section ===
+
   yText.forEach((el, i) => {
     el.addEventListener('click', e => {
       e.preventDefault();
       const target = tContent[i];
       if (!target) return;
 
-      const scrollY = target.getBoundingClientRect().top + window.scrollY;
 
-      gsap.to(window, {
-        scrollTo: scrollY,
-        duration: 1.2,
-        ease: 'power4.inOut'
+      requestAnimationFrame(() => {
+        const scrollY = target.getBoundingClientRect().top + window.scrollY;
+
+        ScrollTrigger.disable(false); 
+        gsap.to(window, {
+          scrollTo: scrollY,
+          duration: 1.2,
+          ease: 'power4.inOut',
+          onComplete: () => {
+            ScrollTrigger.enable();
+            ScrollTrigger.refresh();
+          }
+        });
       });
     });
   });
