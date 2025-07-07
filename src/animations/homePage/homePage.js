@@ -10,7 +10,7 @@ import logoMarquee from './logoMarquee'
 const homePage = () => {
     videoClick()
     initCampLinkAnimation()
-    logoMarquee()
+    // logoMarquee()
     initIntroAnimation()
     initItineraryAnimation()
     initCollectionAnimation()
