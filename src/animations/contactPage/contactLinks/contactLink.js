@@ -6,9 +6,9 @@ const contactLink = () => {
   links.forEach(link => {
     const line = link.querySelector('.c_c_line');
 
-    if (!line) return; // skip if no line
+    if (!line) return;
 
-    // Initial state
+
     gsap.set(line, { x: '-100%', scaleX: 1, transformOrigin: 'left' });
 
     let isEntered = false;
@@ -19,10 +19,10 @@ const contactLink = () => {
       isEntered = true;
       isScaledOut = false;
 
-      // Reset in case we hovered again after scale out
+
       gsap.set(line, { x: '-100%', scaleX: 1, transformOrigin: 'left' });
 
-      // Kill existing tweens if any
+
       if (hoverTimeline) hoverTimeline.kill();
 
       hoverTimeline = gsap.timeline();

@@ -43,8 +43,6 @@ import contactPage from '../animations/contactPage/contactPage'
 import campPage from '../animations/campPage/campPage'
 import campH from '../animations/campPage/campHero/campH'
 
-// Menu Animations
-// menuHover()
 initSmoothScroll()
 menuClick()
 clickMainButton()

@@ -23,8 +23,8 @@ const loadImages = () => {
         const progressTl = gsap.timeline()
 
         // Set minimum duration for the loader
-        const minLoadTime = 2000 // 2 seconds minimum loading time
-        const maxLoadTime = 4000 // 4 seconds maximum loading time
+        const minLoadTime = 2000 
+        const maxLoadTime = 8000 
         const startTime = Date.now()
 
         const updateProgress = (forceComplete = false) => {

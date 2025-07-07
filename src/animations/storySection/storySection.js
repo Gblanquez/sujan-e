@@ -45,7 +45,7 @@ const initStoryDesktop = () => {
     };
 
   } else {
-    // Mobile/tablet with Draggable behavior
+ 
     function getMaxScroll() {
       return storyList.scrollWidth - storyWrapper.offsetWidth;
     }

@@ -142,3 +142,25 @@ body::-webkit-scrollbar {
     }
   }
 
+
+
+  .g_collection_item:nth-child(1) .g_img_wrap {
+    width: 20rem;
+    height: 26rem;
+  }
+
+  
+  .g_collection_item:nth-child(2) .g_img_wrap {
+    width: 48rem;
+    height: 33rem;
+  }
+
+  .g_collection_item:nth-child(3) .g_img_wrap {
+    width: 39rem;
+    height: 26rem;
+  }
+
+  .g_collection_item:nth-child(4) .g_img_wrap {
+    width: 35rem;
+    height: 35rem;
+  }

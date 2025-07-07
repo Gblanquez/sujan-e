@@ -3,6 +3,7 @@ import ScrollTrigger from 'gsap/ScrollTrigger';
 import SplitText from 'gsap/SplitText';
 import Flip from 'gsap/Flip';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import { scrollTo } from '../../../smoothScroll/smoothScroll';
 
 gsap.registerPlugin(ScrollTrigger, SplitText, Flip, ScrollToPlugin);
 
@@ -23,25 +24,15 @@ const timeline = () => {
   ) return;
 
   const splitTitles = [...tTitle].map(title =>
-    new SplitText(title, {
-      type: 'lines',
-      linesClass: 'split-line'
-    })
+    new SplitText(title, { type: 'lines', linesClass: 'split-line' })
   );
 
   const splitYTitles = [...yTitle].map(title =>
-    new SplitText(title, {
-      type: 'chars',
-      charsClass: 'split-char'
-    })
+    new SplitText(title, { type: 'chars', charsClass: 'split-char' })
   );
 
   const splitTexts = [...tText].map(text => {
-    const split = new SplitText(text, {
-      type: 'lines',
-      linesClass: 'split-line'
-    });
-
+    const split = new SplitText(text, { type: 'lines', linesClass: 'split-line' });
     split.lines.forEach(line => {
       const wrapper = document.createElement('div');
       wrapper.style.overflow = 'hidden';
@@ -49,7 +40,6 @@ const timeline = () => {
       line.parentNode.insertBefore(wrapper, line);
       wrapper.appendChild(line);
     });
-
     return split;
   });
 
@@ -171,18 +161,6 @@ const timeline = () => {
       ease: 'power4.out',
       stagger: 0.03
     }, '+=0.02');
-
-    gsap.to(section, {
-      opacity: 0,
-      ease: 'power1.out',
-      duration: 0.6,
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true
-      }
-    });
   });
 
   yearLabels.forEach((label, index) => {
@@ -201,21 +179,66 @@ const timeline = () => {
     });
   });
 
-  yText.forEach((el, i) => {
+  yText.forEach(el => {
     el.addEventListener('click', e => {
       e.preventDefault();
-      const target = tContent[i];
-      const y = target.offsetTop;
 
-      gsap.to(window, {
-        scrollTo: {
-          y,
-          autoKill: false
-        },
+      const index = el.getAttribute('data-index');
+      const target = document.querySelector(`.timeline_content_p[data-index="${index}"]`);
+      const lineTarget = yearLineWrappers[index];
+
+      if (!target || !lineTarget) return;
+
+      const state = Flip.getState(timelineIndicator);
+      lineTarget.appendChild(timelineIndicator);
+      Flip.from(state, {
+        duration: 0.4,
+        ease: 'power2.inOut',
+        absolute: true
+      });
+
+      scrollTo(target, {
+        offset: 0,
         duration: 1.2,
-        ease: 'power4.inOut'
+        easing: t => 1 - Math.pow(1 - t, 3)
       });
     });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    const currentSection = [...tContent].findIndex(section => {
+      const rect = section.getBoundingClientRect();
+      return rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2;
+    });
+
+    if (currentSection === -1) return;
+
+    const nextIndex = e.key === 'ArrowDown' || e.key === 'ArrowRight'
+      ? (currentSection + 1) % tContent.length
+      : e.key === 'ArrowUp' || e.key === 'ArrowLeft'
+      ? (currentSection - 1 + tContent.length) % tContent.length
+      : null;
+
+    if (nextIndex !== null) {
+      const target = tContent[nextIndex];
+      const lineTarget = yearLineWrappers[nextIndex];
+
+      if (lineTarget && timelineIndicator) {
+        const state = Flip.getState(timelineIndicator);
+        lineTarget.appendChild(timelineIndicator);
+        Flip.from(state, {
+          duration: 0.4,
+          ease: 'power2.inOut',
+          absolute: true
+        });
+      }
+
+      scrollTo(target, {
+        offset: 0,
+        duration: 1.2,
+        easing: t => 1 - Math.pow(1 - t, 3)
+      });
+    }
   });
 };
 
