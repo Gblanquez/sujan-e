@@ -14,7 +14,7 @@ const initNavLinkAnimation = () => {
             allNavImages.forEach(img => {
                 if (img !== currentImage) {
                     gsap.to(img, {
-                        filter: 'grayscale(100%)',
+                        // filter: 'grayscale(100%)',
                         scale: 1,
                         duration: 0.8,
                         ease: 'power3.inOut'
@@ -24,7 +24,7 @@ const initNavLinkAnimation = () => {
 
             // Scale up and remove grayscale from current image
             gsap.to(currentImage, {
-                filter: 'grayscale(0%)',
+                // filter: 'grayscale(0%)',
                 scale: 1.05,
                 duration: 0.8,
                 ease: 'power2.inOut'
@@ -50,7 +50,7 @@ const initNavLinkAnimation = () => {
             // Reset all images
             allNavImages.forEach(img => {
                 gsap.to(img, {
-                    filter: 'grayscale(0%)',
+                    // filter: 'grayscale(0%)',
                     scale: 1,
                     duration: 0.8,
                     ease: 'power2.inOut'

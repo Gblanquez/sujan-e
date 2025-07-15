@@ -164,3 +164,48 @@ body::-webkit-scrollbar {
     width: 35rem;
     height: 35rem;
   }
+
+  .thumb_link
+  .gall_link
+  {
+    pointer-events: none !important;
+  }
+
+  .c_galle_link
+  {
+    pointer-events: none !important;
+  }
+
+  .tent_thumb_link
+  {
+    pointer-events: none !important;
+  }
+
+  .thumb_act
+  {
+    display: none;
+  }
+
+  .tent_thumb_act
+  {
+    display: none;
+  }
+
+
+  .g_nav_w.has-bg {
+    background-color: #F6F3EF; 
+    transition: background-color 0.8s ease;
+  }
+  
+  .n_light_b.dark,
+  .m_text.dark,
+  .m_line.dark {
+    color: #3E362F;
+    transition: color 0.8s ease,
+  }
+
+  .n_light_b.dark{
+    color: #3E362F;
+    border-color: #3E362F;
+    transition: color 0.8s ease, border-color 0.8s ease;
+  }

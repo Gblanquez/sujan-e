@@ -5,12 +5,14 @@ import SplitText from 'gsap/SplitText';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
-export const videoClick = () => {
-  const video = document.querySelector('.main-camp-video');
+export const videoClickCamp = () => {
+  const video = document.querySelector('.camp-video');
   const trigger = document.querySelector('.hero_s');
   const navWrapper = document.querySelector('.g_nav_w');
-  const heroTitle = document.querySelector('.h_title');
 
+  const campText = document.querySelector('.camp_text');
+  const svgContainer = document.querySelector('.c_svg_wrap[id]');
+  const svg = svgContainer?.querySelector('svg');
 
   const playText = document.querySelector('.play_text');
   const closeText = document.querySelector('.close_text');
@@ -18,7 +20,10 @@ export const videoClick = () => {
   if (!video || !trigger || window.innerWidth < 1024) return; // Only run on desktop
 
   let soundEnabled = false;
-  let splitTitle = null;
+  let splitCampText = null;
+  let paths = svg
+    ? svg.querySelectorAll('path, line, polyline, polygon, circle, rect')
+    : [];
 
   trigger.addEventListener('click', () => {
     soundEnabled = !soundEnabled;
@@ -34,63 +39,63 @@ export const videoClick = () => {
 
       stop();
 
-
       gsap.to(playText, {
         yPercent: -100,
         opacity: 0,
         duration: 0.8,
-        ease: 'power3.inOut'
+        ease: 'power3.inOut',
       });
 
-      gsap.from(closeText, {
-        yPercent: 100,
-        opacity: 0,
+      gsap.to(closeText, {
+        yPercent: 0,
+        opacity: 1,
         duration: 0.8,
-        ease: 'power3.inOut'
+        ease: 'power3.inOut',
       });
-
 
       if (navWrapper) {
         gsap.to(navWrapper, {
           y: '-100%',
           duration: 1.2,
-          ease: 'power4.inOut'
+          ease: 'power4.inOut',
         });
       }
 
-
-      if (heroTitle) {
-        splitTitle = new SplitText(heroTitle, {
-          type: 'lines,words,chars',
-          linesClass: 'split-line'
+      // Animate camp text out
+      if (campText) {
+        splitCampText = new SplitText(campText, {
+          type: 'lines',
+          linesClass: 'split-line',
         });
 
-        splitTitle.lines.forEach(line => {
+        splitCampText.lines.forEach((line) => {
           const wrapper = document.createElement('div');
           wrapper.style.overflow = 'hidden';
-          wrapper.style.display = 'block';
-          wrapper.style.perspective = '1000px';
           line.parentNode.insertBefore(wrapper, line);
           wrapper.appendChild(line);
         });
 
-        gsap.set(heroTitle, {
-          perspective: 1000,
-          transformStyle: 'preserve-3d'
-        });
-
-        gsap.to(splitTitle.chars, {
-          x: '-10%',
-          y: '-100%',
-          rotateX: 72,
-          rotateY: 45,
-          rotateZ: 4,
-          duration: 2.4,
+        gsap.to(splitCampText.lines, {
+          yPercent: -100,
+          duration: 2,
           ease: 'power4.inOut',
-          stagger: { each: 0.03 }
+          stagger: 0.06,
         });
       }
 
+      // Animate SVG paths out
+      if (paths.length) {
+        gsap.to(paths, {
+          y: '-80%',
+          skewY: 10,
+          scaleY: 0.7,
+          opacity: 0,
+          strokeDashoffset: (i, t) => t.getTotalLength?.() || 0,
+          duration: 1.5,
+          ease: 'power2.inOut',
+          stagger: 0.1,
+        });
+      }
     } else {
       gsap.to(video, {
         duration: 0.6,
@@ -98,42 +103,50 @@ export const videoClick = () => {
         volume: 0,
         onComplete: () => {
           video.muted = true;
-        }
+        },
       });
-
 
       gsap.to(closeText, {
         yPercent: 100,
         opacity: 0,
         duration: 0.8,
-        ease: 'power3.inOut'
+        ease: 'power3.inOut',
       });
 
       gsap.to(playText, {
         yPercent: 0,
         opacity: 1,
         duration: 0.8,
-        ease: 'power3.inOut'
+        ease: 'power3.inOut',
       });
 
       if (navWrapper) {
         gsap.to(navWrapper, {
           y: '0%',
           duration: 1.2,
-          ease: 'power4.out'
+          ease: 'power4.out',
         });
       }
 
-      if (heroTitle && splitTitle) {
-        gsap.to(splitTitle.chars, {
-          x: '0%',
-          y: '0%',
-          rotateX: 0,
-          rotateY: 0,
-          rotateZ: 0,
-          duration: 2.4,
+      if (splitCampText) {
+        gsap.to(splitCampText.lines, {
+          yPercent: 0,
+          duration: 2,
           ease: 'power4.out',
-          stagger: { each: 0.03 }
+          stagger: 0.06,
+        });
+      }
+
+      if (paths.length) {
+        gsap.to(paths, {
+          y: '0%',
+          skewY: 0,
+          scaleY: 1,
+          opacity: 1,
+          strokeDashoffset: 0,
+          duration: 1.5,
+          ease: 'power2.out',
+          stagger: 0.1,
         });
       }
 
@@ -142,4 +155,4 @@ export const videoClick = () => {
   });
 };
 
-export default videoClick;
+export default videoClickCamp;

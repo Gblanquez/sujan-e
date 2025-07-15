@@ -9,7 +9,7 @@ import relaisLoad from './loadAnimations/relaisLoad'
 import pressLoad from './loadAnimations/pressLoad'
 import contactLoad from './loadAnimations/contactLoad'
 import campLoad from './loadAnimations/campLoad'
-import { stop, start, scrollTo, initSmoothScroll } from './smoothScroll/smoothScroll'
+import { stop, start, scrollTo, initSmoothScroll, getLenis } from './smoothScroll/smoothScroll'
 
 import menuHover from './animations/menu/menuHover'
 import menuClick from './animations/menu/menuClick'
@@ -147,38 +147,41 @@ init()
 
 
 
-const lightSections = document.querySelectorAll('[data-bg-light]');
+
+const navbar = document.querySelector('.g_nav_w');
 const targets = [
   document.querySelector('.n_light_b'),
   document.querySelector('.m_text'),
+  document.querySelector('.n_light_b'),
   ...document.querySelectorAll('.m_line')
 ];
 
-let visibleCount = 0;
+const updateNavbar = (scrollY) => {
+  const triggerPoint = window.innerHeight * 0.3;
 
-if (lightSections.length && targets.length) {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        visibleCount++;
-      } else {
-        visibleCount--;
-      }
-
-      visibleCount = Math.max(0, visibleCount);
-
-      targets.forEach(el => {
-        if (!el) return; // Skip nulls
-        if (visibleCount > 0) {
-          el.classList.add('dark');
-        } else {
-          el.classList.remove('dark');
-        }
-      });
+  if (scrollY > triggerPoint) {
+    navbar.classList.add('has-bg');
+    targets.forEach(el => {
+      if (!el) return;
+      el.classList.add('dark');
     });
-  }, {
-    threshold: 0.3
+  } else {
+    navbar.classList.remove('has-bg');
+    targets.forEach(el => {
+      if (!el) return;
+      el.classList.remove('dark');
+    });
+  }
+};
+
+
+const lenis = getLenis();
+
+if (lenis) {
+  lenis.on('scroll', ({ scroll }) => {
+    updateNavbar(scroll);
   });
 
-  lightSections.forEach(section => observer.observe(section));
+  // Call once on load to sync state
+  updateNavbar(lenis.scroll);
 }
