@@ -3,6 +3,7 @@ import { Draggable } from 'gsap/Draggable';
 import { InertiaPlugin } from 'gsap/InertiaPlugin';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import SplitText from 'gsap/SplitText';
+import { start, stop } from '../../../smoothScroll/smoothScroll';
 
 gsap.registerPlugin(Draggable, InertiaPlugin, ScrollTrigger, SplitText);
 
@@ -13,6 +14,7 @@ const initExperienceClick = () => {
     const closeButtons = document.querySelectorAll('[data-a="close-trigger"]');
     const forwardButtons = document.querySelectorAll('[data-a="forward-button-e"]');
     const backwardButtons = document.querySelectorAll('[data-a="back-button-e"]');
+    const navWrapper = document.querySelector('.g_nav_w');
 
     if (!experienceItems.length || !experienceContentWrapper || !experienceContentItems.length) return;
 
@@ -30,9 +32,21 @@ const initExperienceClick = () => {
 
     experienceItems.forEach((item, index) => {
         item.addEventListener('click', () => {
+            if (navWrapper) {
+                gsap.to(navWrapper, {
+                    y: '-100%',
+                    duration: 0.8,
+                    ease: 'power4.inOut'
+                });
+            }
+
             currentIndex = index;
-            experienceContentWrapper.style.display = 'block';
-            showContentAtIndex(currentIndex);
+
+            gsap.delayedCall(0.1, () => {
+                experienceContentWrapper.style.display = 'block';
+                stop();
+                showContentAtIndex(currentIndex);
+            });
         });
     });
 
@@ -47,6 +61,14 @@ const initExperienceClick = () => {
                     galleryDraggable.kill();
                     galleryDraggable = null;
                 }
+                if (navWrapper) {
+                    gsap.to(navWrapper, {
+                        y: '0%',
+                        duration: 0.8,
+                        ease: 'power4.out'
+                    });
+                }
+                start();
             });
         });
     }

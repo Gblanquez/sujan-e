@@ -14,6 +14,7 @@ const initTentClick = () => {
     const closeButtons = document.querySelectorAll('[data-a="close-trigger-t"]');
     const forwardButtons = document.querySelectorAll('[data-a="forward-button-t"]');
     const backwardButtons = document.querySelectorAll('[data-a="back-button-t"]');
+    const navWrapper = document.querySelector('.g_nav_w');
 
     if (!tentItems.length || !tentContentWrapper || !tentContentItems.length) return;
 
@@ -31,10 +32,23 @@ const initTentClick = () => {
 
     tentItems.forEach((item, index) => {
         item.addEventListener('click', () => {
+
+            if (navWrapper) {
+                gsap.to(navWrapper, {
+                    y: '-100%',
+                    duration: 1.0,
+                    ease: 'power4.inOut'
+                });
+            }
+
             currentIndex = index;
-            tentContentWrapper.style.display = 'block';
-            stop();
-            showContentAtIndex(currentIndex);
+
+
+            gsap.delayedCall(0.7, () => {
+                tentContentWrapper.style.display = 'block';
+                stop();
+                showContentAtIndex(currentIndex);
+            });
         });
     });
 
@@ -47,6 +61,14 @@ const initTentClick = () => {
             if (galleryDraggable) {
                 galleryDraggable.kill();
                 galleryDraggable = null;
+            }
+            // Restore nav
+            if (navWrapper) {
+                gsap.to(navWrapper, {
+                    y: '0%',
+                    duration: 0.8,
+                    ease: 'power4.out'
+                });
             }
             start();
         });
@@ -109,7 +131,7 @@ const initTentClick = () => {
             type: "x",
             inertia: true,
             edgeResistance: 0.95,
-            // zIndexBoost: false,
+            zIndexBoost: false,
             bounds: {
                 minX: -maxScroll,
                 maxX: 0
