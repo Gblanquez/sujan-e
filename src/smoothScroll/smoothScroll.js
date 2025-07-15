@@ -3,10 +3,13 @@ import { gsap } from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import 'lenis/dist/lenis.css'
 
-
 let lenis = null;
 
 export const initSmoothScroll = () => {
+  // Don't initialize Lenis in Webflow Designer or Editor
+  const isEditor = document.body.classList.contains('w-editor') || document.documentElement.classList.contains('wf-design-mode');
+  if (isEditor) return null;
+
   if (lenis) return lenis;
   
   lenis = new Lenis({
@@ -53,4 +56,3 @@ export const destroy = () => {
     lenis = null;
   }
 };
-
