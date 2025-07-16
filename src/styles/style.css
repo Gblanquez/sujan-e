@@ -209,3 +209,9 @@ body::-webkit-scrollbar {
     border-color: #3E362F;
     transition: color 0.8s ease, border-color 0.8s ease;
   }
+
+  .logo_link_w.dark
+  {
+    color: #D1A555;
+    transition: color 0.8s ease;
+  }

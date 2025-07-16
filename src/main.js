@@ -153,6 +153,7 @@ const targets = [
   document.querySelector('.n_light_b'),
   document.querySelector('.m_text'),
   document.querySelector('.n_light_b'),
+  document.querySelector('.logo_link_w'),
   ...document.querySelectorAll('.m_line')
 ];
 
