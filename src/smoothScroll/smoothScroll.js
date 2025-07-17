@@ -6,18 +6,20 @@ import 'lenis/dist/lenis.css'
 let lenis = null;
 
 export const initSmoothScroll = () => {
-  // Don't initialize Lenis in Webflow Designer or Editor
   const isEditor = document.body.classList.contains('w-editor') || document.documentElement.classList.contains('wf-design-mode');
   if (isEditor) return null;
 
   if (lenis) return lenis;
-  
+
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
   lenis = new Lenis({
     duration: 2.2,
-    smoothWheel: true,
+    smoothWheel: !isMobile,
+    smooth: !isMobile,
+    smoothTouch: false,
     gestureOrientation: 'vertical',
     wheelMultiplier: 1,
-    smoothTouch: false,
     touchMultiplier: 2,
   });
 
