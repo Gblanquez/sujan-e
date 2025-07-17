@@ -8,7 +8,7 @@ import videoClick from './videoClick'
 import logoMarquee from './logoMarquee'
 
 const homePage = () => {
-    videoClick()
+    // videoClick()
     initCampLinkAnimation()
     // logoMarquee()
     initIntroAnimation()

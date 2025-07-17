@@ -9,7 +9,7 @@ body::-webkit-scrollbar {
 }
 .load_w
 {
-    display: flex;
+    display: none;
     pointer-events: none;
 }
 
@@ -212,6 +212,6 @@ body::-webkit-scrollbar {
 
   .logo_link_w.dark
   {
-    color: #D1A555;
+    color: #D1A555 !important;
     transition: color 0.8s ease;
   }

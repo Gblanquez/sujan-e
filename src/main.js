@@ -85,39 +85,39 @@ const init = async () => {
 
   switch (path) {
     case '/':
-      await homeLoad()
+      // await homeLoad()
 
       homePage()
 
       break
 
     case '/our-story':
-      await storyLoad()
+      // await storyLoad()
       storyPage()
       break
 
     case '/our-collection':
-      await collectionLoad()
+      // await collectionLoad()
       collectionPage()
       break
 
     case '/conservation':
-      await conservationLoad()
+      // await conservationLoad()
       conservationPage()
       break
 
     case '/relais-chateaux':
-      await relaisLoad()
+      // await relaisLoad()
       relaisPage()
       break
 
     case '/press-and-awards':
-      await pressLoad()
+      // await pressLoad()
       pressPage()
       break
 
     case '/contact':
-      await contactLoad()
+      // await contactLoad()
       contactPage()
       break
 
@@ -132,7 +132,7 @@ const init = async () => {
     default:
    
       if (path.startsWith('/sujan-camps/')) {
-        await campLoad()
+        // await campLoad()
         
         campPage()
         
@@ -176,13 +176,27 @@ const updateNavbar = (scrollY) => {
 };
 
 
-const lenis = getLenis();
+const forcedPages = [
+  '/terms-and-conditions',
+  '/contact',
+  '/product',
+  '/relais-chateaux',
+  '/our-collection'
+];
 
-if (lenis) {
-  lenis.on('scroll', ({ scroll }) => {
-    updateNavbar(scroll);
+if (forcedPages.includes(window.location.pathname)) {
+  navbar.classList.add('has-bg');
+  targets.forEach(el => {
+    if (!el) return;
+    el.classList.add('dark');
   });
+} else {
+  const lenis = getLenis();
+  if (lenis) {
+    lenis.on('scroll', ({ scroll }) => {
+      updateNavbar(scroll);
+    });
 
-  // Call once on load to sync state
-  updateNavbar(lenis.scroll);
+    updateNavbar(lenis.scroll);
+  }
 }

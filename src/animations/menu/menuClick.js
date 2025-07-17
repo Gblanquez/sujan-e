@@ -9,6 +9,7 @@ const menuClick = () => {
   const menuLabels = document.querySelectorAll('.nc_label')
   const menuLinks = document.querySelectorAll('.nc_link')
   const menuSocialLinks = document.querySelectorAll('.nav_social_l')
+  const logoLink = document.querySelector('.logo_link_w')
 
   const menuText = document.querySelector('.m_text')
   const closeText = document.querySelector('.m_text_close')
@@ -174,6 +175,11 @@ const menuClick = () => {
       },
       0.8
     )
+    .to(logoLink, {
+      color: '#d1a555',
+      duration: 0.4,
+      ease: 'power2.out'
+    }, 0.3)
 
   const tlClose = gsap.timeline({ paused: true })
 
@@ -234,6 +240,11 @@ const menuClick = () => {
       duration: 0.4,
       ease: 'power2.out'
     }, '1.1')
+    .to(logoLink, {
+      color: '#fbf9f7',
+      duration: 0.4,
+      ease: 'power2.out'
+    }, '1.0')
     .set(menuOpen, { display: 'none' })
 
   menuTrigger.addEventListener('click', () => {
