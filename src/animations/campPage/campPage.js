@@ -12,18 +12,14 @@ import featuredSection from './featuredSection/fetsection';
 import featuredExperience from './featuredExperience/fetuExperience';
 import initExperienceClick from './experienceCarousel/experienceClick';
 import initTentlick from './tentsSection/tentClick';
-import { videoClickCamp } from './videoClickCamp';
 
 const campPage = () => {
-//   campH()
   initExperienceClick();
   initTentlick();
   initGallery();  
   initExperience();
   emblem()
   campInfo()
-  videoClickCamp()
-  // tentEffect()
   initIntroAnimation()
   initCollectionAnimation()
   initCampLinkAnimation()
