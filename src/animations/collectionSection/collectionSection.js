@@ -76,7 +76,6 @@ const initCollectionAnimation = () => {
 
   if (!collectionWrapper || !collectionItems.length) return;
 
-  // Scroll animation for items (desktop & mobile)
   gsap.fromTo('.ca_camp_item', {
     y: '50%'
   }, {
@@ -94,14 +93,17 @@ const initCollectionAnimation = () => {
     }
   });
 
-  // Only enable draggable on mobile/tablet
-  if (window.innerWidth <= 991 && campList && campWrapper) {
+  if (campList && campWrapper) {
     function getMaxScroll() {
       return campList.scrollWidth - campWrapper.offsetWidth;
     }
-
+  
     let maxScroll = getMaxScroll();
-
+  
+    const dots = gsap.utils.toArray('.camp_pag_dot');
+    const nextBtn = document.querySelector('.camp_pag_next');
+    const prevBtn = document.querySelector('.camp_pag_previous');
+  
     const draggable = Draggable.create(campList, {
       type: "x",
       inertia: true,
@@ -112,15 +114,112 @@ const initCollectionAnimation = () => {
       },
       allowContextMenu: true,
       overshootTolerance: 0.15,
-      inertiaResistance: 20
+      inertiaResistance: 20,
+      onDrag: () => {
+        updateActiveDot();
+        updateButtonStates();
+      },
+      onThrowUpdate: () => {
+        updateActiveDot();
+        updateButtonStates();
+      }
     })[0];
+  
+    updateDots(0);
+    updateButtonStates();
+  
+    function updateDots(activeIndex) {
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('is-active', i === activeIndex);
+      });
+    }
+  
+    function updateActiveDot() {
+      const itemWidth = campWrapper.offsetWidth;
+      const pos = Math.abs(draggable.x);
+      let index = Math.round(pos / itemWidth);
+    
+      // Force to first/last if fully scrolled
+      if (draggable.x >= 0) {
+        index = 0;
+      } else if (draggable.x <= -maxScroll) {
+        index = dots.length - 1;
+      }
+    
+      updateDots(index);
+    }
 
+    function updateButtonStates() {
+      const atStart = draggable.x >= 0;
+      const atEnd = draggable.x <= -maxScroll;
+
+      if (prevBtn) {
+        prevBtn.classList.toggle('is-disable', atStart);
+        prevBtn.classList.toggle('is-active', !atStart);
+      }
+      if (nextBtn) {
+        nextBtn.classList.toggle('is-disable', atEnd);
+        nextBtn.classList.toggle('is-active', !atEnd);
+      }
+    }
+  
+    function goToOffset(offset) {
+      const minX = -maxScroll;
+      const maxX = 0;
+      let targetX = draggable.x + offset;
+  
+      if (targetX > maxX) targetX = maxX;
+      if (targetX < minX) targetX = minX;
+  
+      gsap.to(campList, {
+        x: targetX,
+        duration: 0.8,
+        ease: 'power3.inOut',
+        onUpdate: () => draggable.update(),
+        onComplete: () => {
+          updateActiveDot();
+          updateButtonStates();
+        }
+      });
+    }
+  
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        if (!nextBtn.classList.contains('is-disable')) {
+          goToOffset(-campWrapper.offsetWidth);
+        }
+      });
+    }
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        if (!prevBtn.classList.contains('is-disable')) {
+          goToOffset(campWrapper.offsetWidth);
+        }
+      });
+    }
+  
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        gsap.to(campList, {
+          x: -campWrapper.offsetWidth * i,
+          duration: 0.8,
+          ease: 'power3.inOut',
+          onUpdate: () => draggable.update(),
+          onComplete: () => {
+            updateDots(i);
+            updateButtonStates();
+          }
+        });
+      });
+    });
+  
     window.addEventListener('resize', () => {
       maxScroll = getMaxScroll();
       draggable.applyBounds({
         minX: -maxScroll,
         maxX: 0
       });
+      updateButtonStates();
     });
   }
 
