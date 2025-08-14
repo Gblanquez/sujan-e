@@ -12,8 +12,8 @@ const pressPage = () => {
     pressCampLink()
     pressLink()
     featuredButton()
-    initFilterCampCarousel()
-    initFilterYearCarousel()
+    // initFilterCampCarousel()
+    // initFilterYearCarousel()
 }
 
 export default pressPage
