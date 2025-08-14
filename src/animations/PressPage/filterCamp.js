@@ -4,58 +4,48 @@ import { InertiaPlugin } from 'gsap/InertiaPlugin';
 
 gsap.registerPlugin(Draggable, InertiaPlugin);
 
-const initFilterCampCarousel = () => {
+const initSimpleCarousel = () => {
   const wrapper = document.querySelector('.press_camp_filter');
   const list = document.querySelector('.press_camp_filter_list');
 
-  if (!wrapper || !list) return; // safety check
+  if (!wrapper || !list) return;
 
-  let draggableInstance;
+  // Calculate max scroll based on last item's actual position
+  const getMaxScroll = () => {
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const lastItem = list.lastElementChild;
+    if (!lastItem) return 0;
 
-  function enableDraggable() {
-    const getMaxScroll = () => list.scrollWidth - wrapper.offsetWidth;
-    let maxScroll = getMaxScroll();
+    const lastItemRect = lastItem.getBoundingClientRect();
+    const extraSpace = lastItemRect.right - wrapperRect.right;
 
-    draggableInstance = Draggable.create(list, {
-      type: 'x',
-      inertia: true,
-      edgeResistance: 0.95,
-      bounds: {
-        minX: -maxScroll,
-        maxX: 0
-      },
-      allowContextMenu: true,
-      overshootTolerance: 0.15,
-      inertiaResistance: 20
-    })[0];
+    return Math.max(0, extraSpace);
+  };
 
-    window.addEventListener('resize', () => {
-      maxScroll = getMaxScroll();
-      draggableInstance?.applyBounds({
-        minX: -maxScroll,
-        maxX: 0
-      });
+  let maxScroll = getMaxScroll();
+
+  let draggable = Draggable.create(list, {
+    type: 'x',
+    inertia: true,
+    dragClickables: true, // important for form elements
+    edgeResistance: 0.95,
+    bounds: {
+      minX: -maxScroll,
+      maxX: 0
+    },
+    allowContextMenu: true,
+    overshootTolerance: 0.15,
+    inertiaResistance: 20
+  })[0];
+
+  // Recalculate on resize
+  window.addEventListener('resize', () => {
+    maxScroll = getMaxScroll();
+    draggable.applyBounds({
+      minX: -maxScroll,
+      maxX: 0
     });
-  }
-
-  function disableDraggable() {
-    if (draggableInstance) {
-      draggableInstance.kill();
-      draggableInstance = null;
-    }
-  }
-
-  function checkViewport() {
-    if (window.innerWidth <= 1100) {
-      if (!draggableInstance) enableDraggable();
-    } else {
-      disableDraggable();
-    }
-  }
-
-  // Initial check + listen for resize
-  checkViewport();
-  window.addEventListener('resize', checkViewport);
+  });
 };
 
-export default initFilterCampCarousel;
+export default initSimpleCarousel;
