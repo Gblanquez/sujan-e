@@ -17,7 +17,7 @@ const campPage = () => {
   initExperienceClick();
   initTentlick();
   initGallery();  
-  initExperience();
+  // initExperience();
   emblem()
   campInfo()
   initIntroAnimation()
