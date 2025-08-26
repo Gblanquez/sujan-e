@@ -124,12 +124,6 @@ body::-webkit-scrollbar {
 }
 
 
-.n_light_b
-{
-    mix-blend-mode: difference !important;
-}
-
-
 @media (max-width: 1250px) {
     .stat_card {
       width: 21rem;
@@ -197,18 +191,18 @@ body::-webkit-scrollbar {
     transition: background-color 0.8s ease;
   }
   
-  .n_light_b.dark,
+
   .m_text.dark,
   .m_line.dark {
     color: #3E362F;
     transition: color 0.8s ease,
   }
 
-  .n_light_b.dark{
+  /* .n_light_b.dark{
     color: #3E362F;
     border-color: #3E362F;
     transition: color 0.8s ease, border-color 0.8s ease;
-  }
+  } */
 
   .logo_link_w.dark
   {
