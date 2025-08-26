@@ -101,7 +101,7 @@ const init = async () => {
       collectionPage()
       break
 
-    case '/conservation':
+    case '/our-impact':
       // await conservationLoad()
       conservationPage()
       break

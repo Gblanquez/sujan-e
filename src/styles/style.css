@@ -143,7 +143,7 @@ body::-webkit-scrollbar {
   }
 
 
-
+/* 
   .g_collection_item:nth-child(1) .g_img_wrap {
     width: 20rem;
     height: 26rem;
@@ -163,7 +163,7 @@ body::-webkit-scrollbar {
   .g_collection_item:nth-child(4) .g_img_wrap {
     width: 35rem;
     height: 35rem;
-  }
+  } */
 
   .thumb_link
   .gall_link

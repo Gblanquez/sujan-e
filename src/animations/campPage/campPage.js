@@ -16,7 +16,7 @@ import initTentlick from './tentsSection/tentClick';
 const campPage = () => {
   initExperienceClick();
   initTentlick();
-  initGallery();  
+  // initGallery();  
   // initExperience();
   emblem()
   campInfo()
