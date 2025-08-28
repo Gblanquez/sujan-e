@@ -16,13 +16,33 @@ const timeline = () => {
   const yText = document.querySelectorAll('.y_text');
   const yearLabels = document.querySelectorAll('.timeline_y_l_w');
   const yearLineWrappers = document.querySelectorAll('.y_line_w');
-  const timelineIndicator = document.querySelector('.t_line');
+  const timelineIndicators = document.querySelectorAll('.t_line');
 
   if (
     !tContent.length || !tTitle.length || !tText.length || !tImage.length ||
-    !yTitle.length || !yearLabels.length || !timelineIndicator || !yearLineWrappers.length
+    !yTitle.length || !yearLabels.length || !timelineIndicators.length || !yearLineWrappers.length
   ) return;
 
+  // --- Make only one t_line active ---
+  timelineIndicators.forEach((line, i) => {
+    if (i === 0) {
+      line.classList.add('active');
+    } else {
+      line.style.display = 'none';
+    }
+  });
+
+  let timelineIndicator = document.querySelector('.t_line.active');
+
+  const setActiveLine = (index) => {
+    // hide all indicators
+    timelineIndicators.forEach(line => line.style.display = 'none');
+    // show the one active
+    timelineIndicator = timelineIndicators[index];
+    timelineIndicator.style.display = 'block';
+  };
+
+  // --- Split text ---
   const splitTitles = [...tTitle].map(title =>
     new SplitText(title, { type: 'lines', linesClass: 'split-line' })
   );
@@ -53,6 +73,7 @@ const timeline = () => {
     });
   });
 
+  // --- Flip animation on scroll between images ---
   const items = document.querySelectorAll('.timeline_content_p');
 
   items.forEach((item, i) => {
@@ -108,6 +129,7 @@ const timeline = () => {
       }, 0);
   });
 
+  // --- Text + image reveal animation ---
   tContent.forEach((section, i) => {
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -160,14 +182,16 @@ const timeline = () => {
       duration: 1.4,
       ease: 'power4.out',
       stagger: 0.03
-    }, '+=0.02');
+    }, '0.2');
   });
 
+  // --- Flip timeline indicator on scroll ---
   yearLabels.forEach((label, index) => {
     ScrollTrigger.create({
       trigger: tContent[index],
       start: 'top center',
       onEnter: () => {
+        setActiveLine(index);
         const state = Flip.getState(timelineIndicator);
         yearLineWrappers[index].appendChild(timelineIndicator);
         Flip.from(state, {
@@ -179,15 +203,17 @@ const timeline = () => {
     });
   });
 
-  yText.forEach(el => {
+  // --- Year label click -> scroll to correct content ---
+  yText.forEach((el, index) => {
     el.addEventListener('click', e => {
       e.preventDefault();
 
-      const index = el.getAttribute('data-index');
-      const target = document.querySelector(`.timeline_content_p[data-index="${index}"]`);
+      const target = tContent[index];
       const lineTarget = yearLineWrappers[index];
 
       if (!target || !lineTarget) return;
+
+      setActiveLine(index);
 
       const state = Flip.getState(timelineIndicator);
       lineTarget.appendChild(timelineIndicator);
@@ -205,6 +231,7 @@ const timeline = () => {
     });
   });
 
+  // --- Keyboard navigation ---
   document.addEventListener('keydown', (e) => {
     const currentSection = [...tContent].findIndex(section => {
       const rect = section.getBoundingClientRect();
@@ -224,6 +251,7 @@ const timeline = () => {
       const lineTarget = yearLineWrappers[nextIndex];
 
       if (lineTarget && timelineIndicator) {
+        setActiveLine(nextIndex);
         const state = Flip.getState(timelineIndicator);
         lineTarget.appendChild(timelineIndicator);
         Flip.from(state, {
