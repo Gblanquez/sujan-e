@@ -329,7 +329,6 @@ if (mobileItems.length && sections.length) {
       const target = sections[index];
       if (!target) return;
 
-
       const offset = -window.innerHeight * 0.1;
 
       scrollTo(target, {
@@ -343,6 +342,20 @@ if (mobileItems.length && sections.length) {
         mobileTimeline.classList.add('is-collapsed');
         mobileTimeline.classList.remove('is-expanded');
         mobileHeader.classList.remove('is-hidden');
+
+
+        gsap.to(buttonWrapper, {
+          rotation: 0,
+          duration: 0.4,
+          ease: 'power2.out'
+        });
+        gsap.to(lineAB, {
+          scaleX: 1,
+          transformOrigin: 'center center',
+          duration: 0.4,
+          ease: 'power2.out'
+        });
+
         ScrollTrigger.refresh();
       }, 1200);
     });
