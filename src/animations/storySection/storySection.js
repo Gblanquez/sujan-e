@@ -29,11 +29,7 @@ const initStoryDesktop = () => {
       const duration = 1 + (index * 0.2);
       const imageEl = image.querySelector('.story_img_main');
 
-      tl.fromTo(image,
-        { y: '50%' },
-        { y: '-100%', duration, ease: 'none' },
-        0
-      ).to(imageEl,
+      tl.to(imageEl,
         { scale: 1.4, duration: 1.4, ease: 'none' },
         0
       );
