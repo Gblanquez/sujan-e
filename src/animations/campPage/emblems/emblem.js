@@ -11,40 +11,12 @@ const emblem = () => {
     if (!svg) return
 
     const paths = svg.querySelectorAll('path, polygon, rect, circle, line, polyline')
-
-    // Set initial animation states for paths
-    gsap.set(paths, {
-      opacity: 0,
-      x: '-2',
-      y: '2',
-      scale: 0.98,
-      transformOrigin: 'center center'
-    })
-
-
-    gsap.timeline({
-      scrollTrigger: {
-        trigger: container,
-        start: 'top 80%',
-        toggleActions: 'play none none reverse',
-        once: false
-      }
-    }).to(paths, {
-      opacity: 0.5,
-      x: '0',
-      y: '0',
-      scale: 1,
-      duration: 1.4,
-      ease: 'power3.out',
-      stagger: { each: 0.05 }
-    })
+    // No GSAP animations on paths, they stay static
   })
-
 
   const leftEls = document.querySelectorAll('.emb_l_left')
   const rightEls = document.querySelectorAll('.emb_l_right')
 
-  // Setup for left-aligned scaleX animation
   leftEls.forEach(el => {
     gsap.set(el, { scaleX: 0, transformOrigin: 'left center' })
 
@@ -61,7 +33,6 @@ const emblem = () => {
     })
   })
 
-  // Setup for right-aligned scaleX animation
   rightEls.forEach(el => {
     gsap.set(el, { scaleX: 0, transformOrigin: 'right center' })
 
