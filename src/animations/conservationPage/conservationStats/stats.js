@@ -17,6 +17,7 @@ const conservationStats = () => {
 
   if (!statCards.length || !statNumbers.length) return;
 
+  // Number animations
   statNumbers.forEach((number, index) => {
     const targetText = number.textContent;
     const targetNumber = parseFloat(targetText.replace(/,/g, ''));
@@ -46,6 +47,7 @@ const conservationStats = () => {
     });
   });
 
+  // Text blocks animation
   statText.forEach((text) => {
     const splitText = new SplitText(text, {
       type: 'lines,words',
@@ -72,16 +74,17 @@ const conservationStats = () => {
           trigger: text,
           start: 'top 60%',
           toggleActions: 'play none none none',
-          once: true,
-          onComplete: () => {
-            splitText.revert();
-            ScrollTrigger.refresh();
-          }
+          once: true
+        },
+        onComplete: () => {
+          splitText.revert();
+          ScrollTrigger.refresh();
         }
       }
     );
   });
 
+  // Labels animation
   statLabel.forEach((label) => {
     const splitLabel = new SplitText(label, {
       type: 'lines,words',
@@ -108,16 +111,17 @@ const conservationStats = () => {
           trigger: label,
           start: 'top bottom',
           toggleActions: 'play none none none',
-          once: true,
-          onComplete: () => {
-            splitLabel.revert();
-            ScrollTrigger.refresh();
-          }
+          once: true
+        },
+        onComplete: () => {
+          splitLabel.revert();
+          ScrollTrigger.refresh();
         }
       }
     );
   });
 
+  // Horizontal draggable pagination
   if (window.innerWidth <= 1250 && statWrapper && statList) {
     function getMaxScroll() {
       const rawScroll = statList.scrollWidth - statWrapper.offsetWidth;
