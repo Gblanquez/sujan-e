@@ -8,14 +8,12 @@ const initTextAnimation = () => {
   const title = document.querySelector('.ite_title');
   const paragraph = document.querySelector('.ite_text');
   const label = document.querySelector('.i_label');
-  const smallImg = document.querySelector('.ite_label_img')
-  const bigImg = document.querySelector('.ite_img')
+  const smallImg = document.querySelector('.ite_label_img');
+  const bigImg = document.querySelector('.ite_img');
 
   if (!title || !paragraph || !label) return;
 
-  // Ensure layout is complete before splitting
   gsap.delayedCall(0.1, () => {
-    // Split text into lines, words, and chars using GSAP's SplitText
     const splitTitle = new SplitText(title, { 
       type: 'lines,words,chars',
       linesClass: 'split-line'
@@ -31,26 +29,26 @@ const initTextAnimation = () => {
 
     gsap.fromTo(
       splitTitle.lines,
-      {
-        y: '110%',
-      },
+      { y: '110%' },
       {
         y: '0%',
-        stagger: {
-          each: 0.1
-        },
+        stagger: { each: 0.1 },
         duration: 1.8,
         ease: 'power4.out',
         scrollTrigger: {
           trigger: title,
           start: 'top 90%',
-          toggleActions: 'play none none none'
+          toggleActions: 'play none none none',
+          once: true,
+          onLeave: () => {
+            splitTitle.revert();
+            ScrollTrigger.refresh();
+          }
         },
       }
     );
   });
 
-  // Split and animate paragraph
   const splitParagraph = new SplitText(paragraph, {
     type: 'lines,words',
     linesClass: 'split-line'
@@ -66,25 +64,25 @@ const initTextAnimation = () => {
 
   gsap.fromTo(
     splitParagraph.lines,
-    {
-      y: '110%',
-    },
+    { y: '110%' },
     {
       y: '0%',
-      stagger: {
-        each: 0.04
-      },
+      stagger: { each: 0.04 },
       duration: 2.4,
       ease: 'power4.out',
       scrollTrigger: {
         trigger: paragraph,
         start: 'top 95%',
-        toggleActions: 'play none none none'
+        toggleActions: 'play none none none',
+        once: true,
+        onLeave: () => {
+          splitParagraph.revert();
+          ScrollTrigger.refresh();
+        }
       },
     }
   );
 
-  // Split and animate label
   const splitLabel = new SplitText(label, {
     type: 'lines',
     linesClass: 'split-line'
@@ -100,9 +98,7 @@ const initTextAnimation = () => {
 
   gsap.fromTo(
     splitLabel.lines,
-    {
-      y: '110%',
-    },
+    { y: '110%' },
     {
       y: '0%',
       duration: 1.8,
@@ -110,16 +106,19 @@ const initTextAnimation = () => {
       scrollTrigger: {
         trigger: label,
         start: 'top 95%',
-        toggleActions: 'play none none none'
+        toggleActions: 'play none none none',
+        once: true,
+        onLeave: () => {
+          splitLabel.revert();
+          ScrollTrigger.refresh();
+        }
       },
     }
   );
 
-  // Animate images
-  gsap.fromTo(smallImg,
-    {
-      opacity: 0
-    },
+  gsap.fromTo(
+    smallImg,
+    { opacity: 0 },
     {
       opacity: 1,
       duration: 2.0,
@@ -132,10 +131,9 @@ const initTextAnimation = () => {
     }
   );
 
-  gsap.fromTo(bigImg,
-    {
-      opacity: 0
-    },
+  gsap.fromTo(
+    bigImg,
+    { opacity: 0 },
     {
       opacity: 1,
       duration: 2.0,
@@ -151,9 +149,7 @@ const initTextAnimation = () => {
 
 const initItineraryAnimation = () => {
   const itineraryContent = document.querySelector('.itinerary_s');
-  
   if (!itineraryContent) return;
-
   initTextAnimation();
 };
 

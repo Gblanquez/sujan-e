@@ -29,7 +29,12 @@ const initCertificationAnimation = () => {
     scrollTrigger: {
       trigger: content,
       start: 'top 40%',
-      toggleActions: 'play none none none'
+      toggleActions: 'play none none none',
+      once: true,
+      onLeave: () => {
+        splitParagraph.revert();
+        ScrollTrigger.refresh();
+      }
     }
   });
 
@@ -41,7 +46,7 @@ const initCertificationAnimation = () => {
     {
       scaleX: 1,
       duration: 2.6,
-      ease: 'power4.out',
+      ease: 'power4.out'
     }
   )
   .fromTo(label,
@@ -51,7 +56,7 @@ const initCertificationAnimation = () => {
     {
       y: '0%',
       duration: 2.6,
-      ease: 'power4.out',
+      ease: 'power4.out'
     },
     '<'
   )
@@ -65,11 +70,10 @@ const initCertificationAnimation = () => {
         each: 0.1
       },
       duration: 2.0,
-      ease: 'power4.out',
+      ease: 'power4.out'
     },
     '<'
   );
-
 
   gsap.fromTo(imageWrapper,
     {
