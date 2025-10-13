@@ -31,7 +31,7 @@ const initCertificationAnimation = () => {
       start: 'top 40%',
       toggleActions: 'play none none none',
       once: true,
-      onLeave: () => {
+      onComplete: () => {
         splitParagraph.revert();
         ScrollTrigger.refresh();
       }
