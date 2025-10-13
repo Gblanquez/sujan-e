@@ -69,7 +69,7 @@ const initTextAnimation = () => {
         start: 'top 95%',
         toggleActions: 'play none none none',
         once: true,
-        onLeave: () => {
+        onComplete: () => {
           splitParagraph.revert();
           ScrollTrigger.refresh();
         }
