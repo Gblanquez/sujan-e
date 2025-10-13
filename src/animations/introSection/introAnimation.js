@@ -34,11 +34,11 @@ const initTextAnimation = () => {
         trigger: title,
         start: 'top 90%',
         toggleActions: 'play none none none',
-        once: true,
-        onLeave: () => {
-          splitTitle.revert();
-          ScrollTrigger.refresh();
-        }
+        once: true
+      },
+      onComplete: () => {
+        splitTitle.revert();
+        ScrollTrigger.refresh();
       }
     }
   );
@@ -68,11 +68,11 @@ const initTextAnimation = () => {
         trigger: paragraph,
         start: 'top 95%',
         toggleActions: 'play none none none',
-        once: true,
-        onComplete: () => {
-          splitParagraph.revert();
-          ScrollTrigger.refresh();
-        }
+        once: true
+      },
+      onComplete: () => {
+        splitParagraph.revert();
+        ScrollTrigger.refresh();
       }
     }
   );
@@ -102,7 +102,7 @@ const initIntroAnimation = () => {
         scrub: 2,
         invalidateOnRefresh: true,
         toggleActions: 'play none none none'
-      },
+      }
     }
   );
 
