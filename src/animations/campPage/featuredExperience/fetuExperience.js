@@ -14,14 +14,12 @@ export const featuredExperience = () => {
 
   if (!fTitle || !fText || !fLabel || !fImg || !fTrigger || !svgContainer) return;
 
-  // Utility to split, animate, and revert
   const splitAndAnimate = (element) => {
     const split = new SplitText(element, {
       type: 'lines,words,chars',
       linesClass: 'split-line'
     });
 
-    // Mask each line
     split.lines.forEach(line => {
       const wrapper = document.createElement('div');
       wrapper.style.overflow = 'hidden';
@@ -29,31 +27,31 @@ export const featuredExperience = () => {
       wrapper.appendChild(line);
     });
 
-    const animation = gsap.fromTo(split.lines, {
-      yPercent: 100
-    }, {
-      yPercent: 0,
-      duration: 1.4,
-      ease: 'power4.out',
-      stagger: 0.08,
-      scrollTrigger: {
-        trigger: element,
-        start: 'top 92%',
-        toggleActions: 'play none none none',
-        once: true,
-        onLeave: () => {
-          split.revert(); // Clean up splitText to avoid layout bugs on resize
+    gsap.fromTo(split.lines,
+      { yPercent: 100 },
+      {
+        yPercent: 0,
+        duration: 1.4,
+        ease: 'power4.out',
+        stagger: 0.08,
+        scrollTrigger: {
+          trigger: element,
+          start: 'top 92%',
+          toggleActions: 'play none none none',
+          once: true,
+          onComplete: () => {
+            split.revert();
+            ScrollTrigger.refresh();
+          }
         }
       }
-    });
+    );
   };
 
-  // Animate text blocks
   splitAndAnimate(fTitle);
   splitAndAnimate(fText);
   splitAndAnimate(fLabel);
 
-  // Image scale on scroll
   ScrollTrigger.create({
     trigger: fTrigger,
     start: 'top bottom',
@@ -65,7 +63,6 @@ export const featuredExperience = () => {
     })
   });
 
-  // Animate SVG paths
   const svg = svgContainer.querySelector('svg');
   if (svg) {
     const paths = svg.querySelectorAll('path, polygon, rect, circle, line, polyline');
