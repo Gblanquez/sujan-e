@@ -17,7 +17,6 @@ const conservationStats = () => {
 
   if (!statCards.length || !statNumbers.length) return;
 
-  // Number counting animation
   statNumbers.forEach((number, index) => {
     const targetText = number.textContent;
     const targetNumber = parseFloat(targetText.replace(/,/g, ''));
@@ -26,9 +25,7 @@ const conservationStats = () => {
       return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     };
 
-    gsap.set(number, {
-      textContent: '0'
-    });
+    gsap.set(number, { textContent: '0' });
 
     const cardTrigger = statCards[index] || number;
 
@@ -49,7 +46,6 @@ const conservationStats = () => {
     });
   });
 
-  // Animate stat text
   statText.forEach((text) => {
     const splitText = new SplitText(text, {
       type: 'lines,words',
@@ -75,13 +71,17 @@ const conservationStats = () => {
         scrollTrigger: {
           trigger: text,
           start: 'top 60%',
-          toggleActions: 'play none none none'
+          toggleActions: 'play none none none',
+          once: true,
+          onComplete: () => {
+            splitText.revert();
+            ScrollTrigger.refresh();
+          }
         }
       }
     );
   });
 
-  // Animate stat label
   statLabel.forEach((label) => {
     const splitLabel = new SplitText(label, {
       type: 'lines,words',
@@ -107,7 +107,12 @@ const conservationStats = () => {
         scrollTrigger: {
           trigger: label,
           start: 'top bottom',
-          toggleActions: 'play none none none'
+          toggleActions: 'play none none none',
+          once: true,
+          onComplete: () => {
+            splitLabel.revert();
+            ScrollTrigger.refresh();
+          }
         }
       }
     );
@@ -116,7 +121,7 @@ const conservationStats = () => {
   if (window.innerWidth <= 1250 && statWrapper && statList) {
     function getMaxScroll() {
       const rawScroll = statList.scrollWidth - statWrapper.offsetWidth;
-      return Math.max(1, rawScroll); // prevent divide-by-zero
+      return Math.max(1, rawScroll);
     }
 
     let maxScroll = getMaxScroll();
