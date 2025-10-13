@@ -12,13 +12,11 @@ const conservationIntro = () => {
 
     if (!statsTitle || !abBg || !statsSection) return;
 
-    // Split and animate the stats title
     const splitStatsTitle = new SplitText(statsTitle, {
         type: 'lines,words,chars',
         linesClass: 'split-line'
     });
 
-    // Create wrapper divs for overflow masking
     splitStatsTitle.lines.forEach(line => {
         const wrapper = document.createElement('div');
         wrapper.style.overflow = 'hidden';
@@ -27,7 +25,6 @@ const conservationIntro = () => {
         wrapper.appendChild(line);
     });
 
-    // Animate the stats title lines
     gsap.fromTo(
         splitStatsTitle.lines,
         {
@@ -43,7 +40,11 @@ const conservationIntro = () => {
             scrollTrigger: {
                 trigger: statsTitle,
                 start: 'top 80%',
-                toggleActions: 'play none none none'
+                toggleActions: 'play none none none',
+                onComplete: () => {
+                    splitStatsTitle.revert();
+                    ScrollTrigger.refresh();
+                }
             }
         }
     );
