@@ -13,7 +13,6 @@ export const featuredSection = () => {
 
   if (!fText || !fImg || !fTitle || !fLabel || !fTrigger) return;
 
-  // Utility to split, animate, and revert
   const splitAndAnimate = (element) => {
     const split = new SplitText(element, {
       type: 'lines,words,chars',
@@ -27,31 +26,32 @@ export const featuredSection = () => {
       wrapper.appendChild(line);
     });
 
-    gsap.fromTo(split.lines, {
-      yPercent: 100
-    }, {
-      yPercent: 0,
-      duration: 1.4,
-      ease: 'power4.out',
-      stagger: 0.08,
-      scrollTrigger: {
-        trigger: element,
-        start: 'top 92%',
-        toggleActions: 'play none none none',
-        once: true,
-        onLeave: () => {
-          split.revert(); // Clean up to avoid text breaking on resize
+    gsap.fromTo(
+      split.lines,
+      { yPercent: 100 },
+      {
+        yPercent: 0,
+        duration: 1.4,
+        ease: 'power4.out',
+        stagger: 0.08,
+        scrollTrigger: {
+          trigger: element,
+          start: 'top 92%',
+          toggleActions: 'play none none none',
+          once: true
+        },
+        onComplete: () => {
+          split.revert();
+          ScrollTrigger.refresh();
         }
       }
-    });
+    );
   };
 
-  // Animate each text block
   splitAndAnimate(fTitle);
   splitAndAnimate(fText);
   splitAndAnimate(fLabel);
 
-  // Scroll-based image scale animation
   ScrollTrigger.create({
     trigger: fTrigger,
     start: 'top bottom',
