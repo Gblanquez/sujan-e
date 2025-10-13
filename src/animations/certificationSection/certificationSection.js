@@ -30,15 +30,16 @@ const initCertificationAnimation = () => {
       trigger: content,
       start: 'top 40%',
       toggleActions: 'play none none none',
-      once: true,
-      onComplete: () => {
-        splitParagraph.revert();
-        ScrollTrigger.refresh();
-      }
+      once: true
+    },
+    onComplete: () => {
+      splitParagraph.revert();
+      ScrollTrigger.refresh();
     }
   });
 
-  tl.fromTo(line,
+  tl.fromTo(
+    line,
     {
       scaleX: 0,
       transformOrigin: 'left center'
@@ -49,33 +50,30 @@ const initCertificationAnimation = () => {
       ease: 'power4.out'
     }
   )
-  .fromTo(label,
-    {
-      y: '110%'
-    },
-    {
-      y: '0%',
-      duration: 2.6,
-      ease: 'power4.out'
-    },
-    '<'
-  )
-  .fromTo(splitParagraph.lines,
-    {
-      y: '110%'
-    },
-    {
-      y: '0%',
-      stagger: {
-        each: 0.1
+    .fromTo(
+      label,
+      { y: '110%' },
+      {
+        y: '0%',
+        duration: 2.6,
+        ease: 'power4.out'
       },
-      duration: 2.0,
-      ease: 'power4.out'
-    },
-    '<'
-  );
+      '<'
+    )
+    .fromTo(
+      splitParagraph.lines,
+      { y: '110%' },
+      {
+        y: '0%',
+        stagger: { each: 0.1 },
+        duration: 2.0,
+        ease: 'power4.out'
+      },
+      '<'
+    );
 
-  gsap.fromTo(imageWrapper,
+  gsap.fromTo(
+    imageWrapper,
     {
       scale: 1,
       y: '0%'
