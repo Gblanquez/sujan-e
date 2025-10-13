@@ -34,17 +34,15 @@ const conservationIntro = () => {
             y: '0%',
             duration: 1.8,
             ease: 'power4.out',
-            stagger: {
-                each: 0.1
-            },
+            stagger: { each: 0.1 },
             scrollTrigger: {
                 trigger: statsTitle,
                 start: 'top 80%',
-                toggleActions: 'play none none none',
-                onComplete: () => {
-                    splitStatsTitle.revert();
-                    ScrollTrigger.refresh();
-                }
+                toggleActions: 'play none none none'
+            },
+            onComplete: () => {
+                splitStatsTitle.revert();
+                ScrollTrigger.refresh();
             }
         }
     );
