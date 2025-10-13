@@ -27,7 +27,8 @@ export const featuredExperience = () => {
       wrapper.appendChild(line);
     });
 
-    gsap.fromTo(split.lines,
+    gsap.fromTo(
+      split.lines,
       { yPercent: 100 },
       {
         yPercent: 0,
@@ -38,11 +39,11 @@ export const featuredExperience = () => {
           trigger: element,
           start: 'top 92%',
           toggleActions: 'play none none none',
-          once: true,
-          onComplete: () => {
-            split.revert();
-            ScrollTrigger.refresh();
-          }
+          once: true
+        },
+        onComplete: () => {
+          split.revert();
+          ScrollTrigger.refresh();
         }
       }
     );
