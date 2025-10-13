@@ -9,84 +9,73 @@ const initTextAnimation = () => {
   const paragraph = document.querySelector('.i_text');
   if (!title || !paragraph) return;
 
-  let splitTitle, splitParagraph;
-
-  const animate = () => {
-    if (splitTitle) splitTitle.revert();
-    if (splitParagraph) splitParagraph.revert();
-
-    splitTitle = new SplitText(title, { 
-      type: 'lines,words,chars',
-      linesClass: 'split-line'
-    });
-
-    splitTitle.lines.forEach(line => {
-      const wrapper = document.createElement('div');
-      wrapper.style.overflow = 'hidden';
-      wrapper.style.display = 'block';
-      line.parentNode.insertBefore(wrapper, line);
-      wrapper.appendChild(line);
-    });
-
-    gsap.fromTo(
-      splitTitle.lines,
-      { y: '110%' },
-      {
-        y: '0%',
-        stagger: { each: 0.1 },
-        duration: 1.8,
-        ease: 'power4.out',
-        scrollTrigger: {
-          trigger: title,
-          start: 'top 90%',
-          toggleActions: 'play none none none',
-          invalidateOnRefresh: true
-        },
-      }
-    );
-
-    splitParagraph = new SplitText(paragraph, {
-      type: 'lines,words',
-      linesClass: 'split-line'
-    });
-
-    splitParagraph.lines.forEach(line => {
-      const wrapper = document.createElement('div');
-      wrapper.style.overflow = 'hidden';
-      wrapper.style.display = 'block';
-      line.parentNode.insertBefore(wrapper, line);
-      wrapper.appendChild(line);
-    });
-
-    gsap.fromTo(
-      splitParagraph.lines,
-      { y: '110%' },
-      {
-        y: '0%',
-        stagger: { each: 0.04 },
-        duration: 2.4,
-        ease: 'power4.out',
-        scrollTrigger: {
-          trigger: paragraph,
-          start: 'top 95%',
-          toggleActions: 'play none none none',
-          invalidateOnRefresh: true
-        },
-      }
-    );
-  };
-
-  animate();
-
-  let resizeTimeout;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-      ScrollTrigger.getAll().forEach(st => st.kill());
-      animate();
-      ScrollTrigger.refresh();
-    }, 200);
+  const splitTitle = new SplitText(title, { 
+    type: 'lines,words,chars',
+    linesClass: 'split-line'
   });
+
+  splitTitle.lines.forEach(line => {
+    const wrapper = document.createElement('div');
+    wrapper.style.overflow = 'hidden';
+    wrapper.style.display = 'block';
+    line.parentNode.insertBefore(wrapper, line);
+    wrapper.appendChild(line);
+  });
+
+  gsap.fromTo(
+    splitTitle.lines,
+    { y: '110%' },
+    {
+      y: '0%',
+      stagger: { each: 0.1 },
+      duration: 1.8,
+      ease: 'power4.out',
+      scrollTrigger: {
+        trigger: title,
+        start: 'top 90%',
+        toggleActions: 'play none none none',
+        once: true,
+        onLeave: () => {
+          splitTitle.revert();
+          ScrollTrigger.refresh();
+        }
+      }
+    }
+  );
+
+  const splitParagraph = new SplitText(paragraph, {
+    type: 'lines,words',
+    linesClass: 'split-line'
+  });
+
+  splitParagraph.lines.forEach(line => {
+    const wrapper = document.createElement('div');
+    wrapper.style.overflow = 'hidden';
+    wrapper.style.display = 'block';
+    line.parentNode.insertBefore(wrapper, line);
+    wrapper.appendChild(line);
+  });
+
+  gsap.fromTo(
+    splitParagraph.lines,
+    { y: '110%' },
+    {
+      y: '0%',
+      stagger: { each: 0.04 },
+      duration: 2.4,
+      ease: 'power4.out',
+      scrollTrigger: {
+        trigger: paragraph,
+        start: 'top 95%',
+        toggleActions: 'play none none none',
+        once: true,
+        onLeave: () => {
+          splitParagraph.revert();
+          ScrollTrigger.refresh();
+        }
+      }
+    }
+  );
 };
 
 const initIntroAnimation = () => {
