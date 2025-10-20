@@ -114,7 +114,6 @@ const conservationStats = () => {
         },
         onComplete: () => {
           splitLabel.revert();
-          ScrollTrigger.refresh();
         }
       }
     );
