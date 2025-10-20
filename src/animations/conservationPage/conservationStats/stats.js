@@ -113,7 +113,7 @@ const conservationStats = () => {
           once: true
         },
         onComplete: () => {
-          splitLabel.revert();
+          // splitLabel.revert();
         }
       }
     );
