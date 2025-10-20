@@ -78,7 +78,6 @@ const conservationStats = () => {
         },
         onComplete: () => {
           splitText.revert();
-          ScrollTrigger.refresh();
         }
       }
     );
