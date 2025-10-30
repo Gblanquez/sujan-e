@@ -55,7 +55,7 @@ const conservationIntro = () => {
         },
         {
             scale: 1.3,
-            y: '15%',
+            y: '8%',
             ease: 'none',
             scrollTrigger: {
                 trigger: statsSection,
