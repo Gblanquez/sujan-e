@@ -82,37 +82,37 @@ const init = async () => {
   const path = getCurrentPath()
   switch (path) {
     case '/':
-      // await homeLoad()
+
       homePage()
       break
 
     case '/our-story':
-      // await storyLoad()
+  
       storyPage()
       break
 
     case '/our-collection':
-      // await collectionLoad()
+     
       collectionPage()
       break
 
     case '/our-impact':
-      // await conservationLoad()
+     
       conservationPage()
       break
 
     case '/relais-chateaux':
-      // await relaisLoad()
+ 
       relaisPage()
       break
 
     case '/press-and-awards':
-      // await pressLoad()
+
       pressPage()
       break
 
     case '/contact':
-      // await contactLoad()
+      
       contactPage()
       break
 
